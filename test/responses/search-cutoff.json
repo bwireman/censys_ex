@@ -1,0 +1,43 @@
+{
+    "code": 200,
+    "status": "OK",
+    "result": {
+        "query": "1",
+        "total": 1,
+        "hits": [
+            {
+                "ip": "147.78.60.45",
+                "services": [
+                    {
+                        "port": 443,
+                        "service_name": "HTTP",
+                        "transport_protocol": "TCP"
+                    }
+                ],
+                "location": {
+                    "continent": "Europe",
+                    "country": "United Kingdom",
+                    "country_code": "GB",
+                    "timezone": "Europe/London",
+                    "coordinates": {
+                        "latitude": 51.4964,
+                        "longitude": -0.1224
+                    },
+                    "registered_country": "United Kingdom",
+                    "registered_country_code": "GB"
+                },
+                "autonomous_system": {
+                    "asn": 40513,
+                    "description": "EDGE-TECHNOLOGY-GROUP",
+                    "bgp_prefix": "147.78.60.0/24",
+                    "name": "EDGE-TECHNOLOGY-GROUP",
+                    "country_code": "US"
+                }
+            }
+        ],
+        "links": {
+            "next": "",
+            "prev": ""
+        }
+    }
+}
