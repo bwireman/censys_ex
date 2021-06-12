@@ -28,8 +28,8 @@ jobs:
             lint: lint
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Elixir
       - uses: erlef/setup-elixir@v1
+        name: Set up Elixir
         with:
           otp-version: ${{matrix.pair.otp}}
           elixir-version: ${{matrix.pair.elixir}}

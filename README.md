@@ -1,6 +1,7 @@
 # CensysEx
-
 Tiny Elixir ⚗️ wrapper for the [Censys Search 2.0 API](https://search.censys.io/api) 
+
+[![.github/workflows/elixir.yml](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml/badge.svg?branch=main)](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml)
 
 _**Note**_: this is **_NOT_** an official Censys library, and is not supported or affiliated with Censys at this time. 
 
