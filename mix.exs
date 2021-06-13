@@ -16,10 +16,7 @@ defmodule CensysEx.MixProject do
       description: description(),
       source_url: "https://github.com/bwireman/censys_ex",
       homepage_url: "https://hexdocs.pm/censys_ex/readme.html",
-      licenses: ["MIT"],
-      links: %{
-        "Github" => "https://github.com/bwireman/censys_ex",
-      }
+      package: package()
     ]
   end
 
@@ -53,5 +50,15 @@ defmodule CensysEx.MixProject do
 
   def description do
     "A small Elixir ⚗️ wrapper for Censys Search v2 APIs"
+  end
+
+  defp package() do
+    [
+      name: "censys_ex",
+      licenses: ["MIT"],
+      links: %{
+        "Github" => "https://github.com/bwireman/censys_ex"
+      }
+    ]
   end
 end
