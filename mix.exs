@@ -11,15 +11,21 @@ defmodule CensysEx.MixProject do
       docs: [
         extras: ["README.md"],
         main: "readme"
-      ]
+      ],
+      name: "censys_ex",
+      description: description(),
+      source_url: "https://github.com/bwireman/censys_ex",
+      homepage_url: "https://hexdocs.pm/censys_ex/readme.html",
+      licenses: ["MIT"],
+      links: %{
+        "Github" => "https://github.com/bwireman/censys_ex",
+      }
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    []
   end
 
   # Run "mix help deps" to learn about dependencies.
@@ -36,7 +42,16 @@ defmodule CensysEx.MixProject do
 
   defp aliases do
     [
-      quality: ["credo --strict", "compile --warnings-as-errors", "run -e 'IO.puts(\"LGTM 🤘!\")'"]
+      quality: [
+        "clean",
+        "compile --warnings-as-errors",
+        "credo --strict",
+        "run -e 'IO.puts(\"LGTM 🤘!\")'"
+      ]
     ]
+  end
+
+  def description do
+    "A small Elixir ⚗️ wrapper for Censys Search v2 APIs"
   end
 end
