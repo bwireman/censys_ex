@@ -1,7 +1,7 @@
 defmodule CensysEx.Search do
   @moduledoc false
 
-  # Client for Censys Search 2.0 APIs
+  # Client for Search API
   @enforce_keys [:query, :per_page, :index]
   defstruct [:query, :per_page, :index, cursor: "", results: %{}, page: 0]
 
@@ -36,22 +36,12 @@ defmodule CensysEx.Search do
   end
 
   defp stream_next(resource) do
-    case search_internal(resource) do
-      {:ok, acc} ->
-        # if acc.cursor != "" do
-        # {[get_hits(acc)], acc}
-        # else
-        # {:halt, acc}
-        # end
+    acc = search_internal!(resource)
 
-        case {acc.cursor, acc.results, acc.page} do
-          {cursor, _, page} when cursor != "" or page == 1 -> {[get_hits(acc)], acc}
-          {"", _, _} -> {:halt, acc}
-          {_, %{}, _} -> {:halt, acc}
-        end
-
-      error ->
-        {:halt, error}
+    case {acc.cursor, acc.results, acc.page} do
+      {cursor, _, page} when cursor != "" or page == 1 -> {[get_hits(acc)], acc}
+      {"", _, _} -> {:halt, acc}
+      {_, %{}, _} -> {:halt, acc}
     end
   end
 
@@ -62,8 +52,8 @@ defmodule CensysEx.Search do
   defp iterate_client(%CensysEx.Search{} = client, body \\ %{}, cursor \\ ""),
     do: %{client | results: body, cursor: cursor, page: client.page + 1}
 
-  @spec search_internal(t()) :: {:ok, t()} | {:error, any()}
-  defp search_internal(%CensysEx.Search{} = client) do
+  @spec search_internal!(t()) :: t()
+  defp search_internal!(%CensysEx.Search{} = client) do
     opts =
       case client.cursor do
         "" -> [q: client.query, per_page: client.per_page]
@@ -71,12 +61,12 @@ defmodule CensysEx.Search do
       end
 
     if client.page > 0 and client.cursor == "" do
-      {:ok, iterate_client(client)}
+      iterate_client(client)
     else
       case CensysEx.Util.get_client().get(client.index, "search", [], params: opts) do
         {:ok, body} ->
           %{"result" => %{"links" => %{"next" => next_cursor}}} = body
-          {:ok, iterate_client(client, body, next_cursor)}
+          iterate_client(client, body, next_cursor)
 
         {:error, err} ->
           raise CensysEx.Exception, message: "CensysEx: " <> err
