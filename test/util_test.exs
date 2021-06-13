@@ -3,7 +3,7 @@ defmodule CensysExUtilTest do
 
   # this is kind of a dumb test but...
   test "get_client" do
-    assert CensysEx.Util.get_client == CensysEx.ApiMock
+    assert CensysEx.Util.get_client() == CensysEx.ApiMock
   end
 
   test "parse body: Success",
@@ -19,7 +19,9 @@ defmodule CensysExUtilTest do
   test "parse body: Unauthorized",
     do:
       assert(
-        CensysEx.Util.parse_body(~s({"code": 401, "status": "Unauthorized", "error": "You must authenticate with a valid API ID and secret."})) ==
+        CensysEx.Util.parse_body(
+          ~s({"code": 401, "status": "Unauthorized", "error": "You must authenticate with a valid API ID and secret."})
+        ) ==
           {:error, "You must authenticate with a valid API ID and secret."}
       )
 

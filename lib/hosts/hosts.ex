@@ -39,7 +39,7 @@ defmodule CensysEx.Hosts do
   """
   @spec view(String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
   def view(ip, at_time \\ nil),
-    do: CensysEx.Util.get_client.view(@index, ip, at_time)
+    do: CensysEx.Util.get_client().view(@index, ip, at_time)
 
   @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
@@ -56,5 +56,5 @@ defmodule CensysEx.Hosts do
   """
   @spec aggregate(String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
   def aggregate(field, query \\ nil, num_buckets \\ 50),
-    do: CensysEx.Util.get_client.aggregate(@index, field, query, num_buckets)
+    do: CensysEx.Util.get_client().aggregate(@index, field, query, num_buckets)
 end

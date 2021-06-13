@@ -41,13 +41,11 @@ defmodule CensysEx.API do
     end
   end
 
-  @doc false
   @spec view(String.t(), String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
   @impl true
   def view(resource, id, at_time \\ nil),
-    do: get(resource, "#{id}", [], params: CensysEx.Util.build_view_params(at_time))
+    do: get(resource, id, [], params: CensysEx.Util.build_view_params(at_time))
 
-  @doc false
   @spec aggregate(String.t(), String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
   @impl true
   def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
@@ -56,8 +54,7 @@ defmodule CensysEx.API do
         params: CensysEx.Util.build_aggregate_params(field, query, num_buckets)
       )
 
-  @doc false
-  @spec get(String.t(), String.t(), List, List) :: {:error, any()} | {:ok, map()}
+  @spec get(String.t(), String.t(), list(), keyword()) :: {:error, any()} | {:ok, map()}
   @impl true
   def get(resource, action, headers \\ [], options \\ []),
     do: GenServer.call(__MODULE__, {:get, {resource, action, headers, options}}, 10_000)
@@ -70,9 +67,7 @@ defmodule CensysEx.API do
 
   @doc false
   @impl true
-  def init({id, secret}) do
-    {:ok, {id, secret}}
-  end
+  def init({id, secret}), do: {:ok, {id, secret}}
 
   @doc false
   @impl true
