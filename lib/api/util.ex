@@ -2,7 +2,7 @@ defmodule CensysEx.Util do
   @moduledoc false
 
   def get_client do
-    Application.get_env(:censys_elixir, :client, CensysEx.API)
+    Application.get_env(:censys_ex, :client, CensysEx.API)
   end
 
   def parse_body(body) do
@@ -17,5 +17,17 @@ defmodule CensysEx.Util do
       err ->
         err
     end
+  end
+
+  def build_view_params(at_time) do
+    case at_time do
+      nil -> []
+      _ -> [at_time: Timex.format!(at_time, "%Y-%m-%dT%H:%M:%S", :strftime)]
+    end
+  end
+
+  def build_aggregate_params(field, query, num_buckets) do
+    params = [field: field, num_buckets: num_buckets]
+    if(query != nil, do: [{:q, query} | params], else: params)
   end
 end

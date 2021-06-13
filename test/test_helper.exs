@@ -11,5 +11,5 @@ defmodule CensysEx.TestHelpers do
 end
 
 Mox.defmock(CensysEx.ApiMock, for: CensysEx.APIBehavior)
-Application.put_env(:censys_elixir, :client, CensysEx.ApiMock)
+Application.put_env(:censys_ex, :client, CensysEx.ApiMock)
 ExUnit.start()
