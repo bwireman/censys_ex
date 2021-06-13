@@ -1,7 +1,8 @@
 # CensysEx
 Tiny Elixir ⚗️ wrapper for the [Censys Search 2.0 API](https://search.censys.io/api) 
 
-[![](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml/badge.svg?branch=main)](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml) ![](https://img.shields.io/github/license/bwireman/censys_ex) ![](https://img.shields.io/github/last-commit/bwireman/censys_ex)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
+[![](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml/badge.svg?branch=main)](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml) ![](https://img.shields.io/github/license/bwireman/censys_ex) ![](https://img.shields.io/github/last-commit/bwireman/censys_ex) ![](https://img.shields.io/hexpm/v/censys_ex?style=flat) ![](https://img.shields.io/hexpm/dt/censys_ex) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 
 _**Note**_: this is **_NOT_** an official Censys library, and is not supported by or affiliated with Censys at this time. I do not own Censys Trademarks or Copyrights
 

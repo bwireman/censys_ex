@@ -1,10 +1,12 @@
 defmodule CensysEx.MixProject do
   use Mix.Project
 
+  @pkg_version "0.1.1"
+
   def project do
     [
       app: :censys_ex,
-      version: "0.1.0",
+      version: @pkg_version,
       elixir: "~> 1.10",
       deps: deps(),
       aliases: aliases(),
