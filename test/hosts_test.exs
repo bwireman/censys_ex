@@ -92,8 +92,7 @@ defmodule CensysExHostTest do
     assert length(hits) == 20
   end
 
-  # --- Unauthorized ---
-  test "raises when unauthorized" do
+  test "search raises when unauthorized" do
     CensysEx.ApiMock
     |> expect(:get, 1, fn _, _, _, _ ->
       CensysEx.TestHelpers.load_response("unauthorized")
@@ -101,7 +100,7 @@ defmodule CensysExHostTest do
 
     assert_raise CensysEx.Exception, fn ->
       CensysEx.Hosts.search("services.service_name: SIP")
-      |> Stream.take(1)
+      |> Stream.take(150)
       |> Enum.to_list()
     end
   end

@@ -44,25 +44,17 @@ defmodule CensysEx.API do
   @doc false
   @spec view(String.t(), String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
   @impl true
-  def view(resource, id, at_time \\ nil) do
-    opts =
-      case at_time do
-        nil -> []
-        _ -> [params: [at_time: Timex.format(at_time, "%Y-%m-%dT%H:%M:%S", :strftime)]]
-      end
-
-    get(resource, "#{id}", [], opts)
-  end
+  def view(resource, id, at_time \\ nil),
+    do: get(resource, "#{id}", [], params: CensysEx.Util.build_view_params(at_time))
 
   @doc false
   @spec aggregate(String.t(), String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
   @impl true
-  def aggregate(resource, field, query \\ nil, num_buckets \\ 50) do
-    params = [field: field, num_buckets: num_buckets]
-    params = if(query != nil, do: [{:q, query} | params], else: params)
-
-    get(resource, "aggregate", [], params: params)
-  end
+  def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
+    do:
+      get(resource, "aggregate", [],
+        params: CensysEx.Util.build_aggregate_params(field, query, num_buckets)
+      )
 
   @doc false
   @spec get(String.t(), String.t(), List, List) :: {:error, any()} | {:ok, map()}
@@ -108,5 +100,10 @@ defmodule CensysEx.API do
       end
 
     {:reply, resp, {id, secret}}
+  end
+
+  @impl true
+  def handle_info(_, state) do
+    {:noreply, state}
   end
 end
