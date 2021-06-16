@@ -14,26 +14,27 @@ defmodule CensysEx.Search do
           page: integer()
         }
 
+  def start(index, query \\ "", per_page \\ 100),
+    do:
+      build(index, query, per_page)
+      |> search()
+
   @spec build(String.t(), String.t(), integer()) :: t()
-  def build(index, query \\ "", per_page \\ 100) do
-    %CensysEx.Search{
+  defp build(index, query, per_page),
+    do: %CensysEx.Search{
       index: index,
       query: query,
       per_page: per_page
     }
-  end
 
-  def search(%CensysEx.Search{} = client) do
-    stream(client) |> Stream.flat_map(& &1)
-  end
-
-  defp stream(%CensysEx.Search{} = client) do
-    Stream.resource(
-      fn -> client end,
-      fn resource -> stream_next(resource) end,
-      fn _ -> :ok end
-    )
-  end
+  defp search(%CensysEx.Search{} = client),
+    do:
+      Stream.resource(
+        fn -> client end,
+        fn resource -> stream_next(resource) end,
+        fn _ -> :ok end
+      )
+      |> Stream.flat_map(& &1)
 
   defp stream_next(resource) do
     acc = search_internal!(resource)

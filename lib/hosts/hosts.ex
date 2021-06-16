@@ -2,6 +2,7 @@ defmodule CensysEx.Hosts do
   @moduledoc """
   CensysEx wrapper for the search.censys.io v2 API for the "hosts" resource
   """
+  alias CensysEx.{Search, Util}
 
   @index "hosts"
 
@@ -13,15 +14,15 @@ defmodule CensysEx.Hosts do
   ## Examples
 
   ```
-  CensysEx.Hosts.search("services.service_name: HTTP")
-  |> Stream.take(500)
+  CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)")
+  |> Stream.take(25)
+  |> Stream.map(&Map.get(&1, "ip"))
   |> Enum.to_list()
+  ["10.0.0.6", "10.2.0.1", ...]
   ```
   """
   def search(query \\ "", per_page \\ 100),
-    do:
-      CensysEx.Search.build(@index, query, per_page)
-      |> CensysEx.Search.search()
+    do: Search.start(@index, query, per_page)
 
   @doc """
   Hits the Censys Hosts view API. Returning full
@@ -34,12 +35,13 @@ defmodule CensysEx.Hosts do
   ```
   CensysEx.Hosts.view("127.0.0.1")
 
+  # View "127.0.0.1" at a certain time
   CensysEx.Hosts.view("127.0.0.1", ~U[2021-06-07 12:53:27.450073Z])
   ```
   """
   @spec view(String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
   def view(ip, at_time \\ nil),
-    do: CensysEx.Util.get_client().view(@index, ip, at_time)
+    do: Util.get_client().view(@index, ip, at_time)
 
   @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
@@ -56,5 +58,5 @@ defmodule CensysEx.Hosts do
   """
   @spec aggregate(String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
   def aggregate(field, query \\ nil, num_buckets \\ 50),
-    do: CensysEx.Util.get_client().aggregate(@index, field, query, num_buckets)
+    do: Util.get_client().aggregate(@index, field, query, num_buckets)
 end
