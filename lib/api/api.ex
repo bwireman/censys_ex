@@ -2,9 +2,14 @@ defmodule CensysEx.API do
   @behaviour CensysEx.APIBehavior
   use GenServer
 
+  alias CensysEx.Util
+
   @moduledoc """
   Base Wrapper for search.censys.io v2 APIs
   """
+
+  @id_var "CENSYS_API_ID"
+  @secret_var "CENSYS_API_SECRET"
 
   # api
 
@@ -13,14 +18,14 @@ defmodule CensysEx.API do
 
   ## Examples
   ```
-  iex(1)> # CENSYS_API_ID not set
+  iex(1)> # CENSYS_API_ID environment var not set
   iex(2)> CensysEx.API.start_link
-  {:error, "Censys API ID missing!"}
+  {:error, "CENSYS_API_ID missing!"}
   ```
   """
   def start_link do
-    id = System.get_env("CENSYS_API_ID", "")
-    secret = System.get_env("CENSYS_API_SECRET", "")
+    id = System.get_env(@id_var, "")
+    secret = System.get_env(@secret_var, "")
 
     CensysEx.API.start_link(id, secret)
   end
@@ -35,8 +40,8 @@ defmodule CensysEx.API do
   """
   def start_link(id, secret) do
     case {id, secret} do
-      {"", _} -> {:error, "Censys API ID missing!"}
-      {_, ""} -> {:error, "Censys API SECRET missing!"}
+      {"", _} -> {:error, @id_var <> " missing!"}
+      {_, ""} -> {:error, @secret_var <> " missing!"}
       _ -> GenServer.start_link(__MODULE__, {id, secret}, name: __MODULE__)
     end
   end
@@ -44,14 +49,14 @@ defmodule CensysEx.API do
   @spec view(String.t(), String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
   @impl true
   def view(resource, id, at_time \\ nil),
-    do: get(resource, id, [], params: CensysEx.Util.build_view_params(at_time))
+    do: get(resource, id, [], params: Util.build_view_params(at_time))
 
   @spec aggregate(String.t(), String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
   @impl true
   def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
     do:
       get(resource, "aggregate", [],
-        params: CensysEx.Util.build_aggregate_params(field, query, num_buckets)
+        params: Util.build_aggregate_params(field, query, num_buckets)
       )
 
   @spec get(String.t(), String.t(), list(), keyword()) :: {:error, any()} | {:ok, map()}
@@ -88,7 +93,7 @@ defmodule CensysEx.API do
     resp =
       case HTTPoison.get(path, headers, options) do
         {:ok, %HTTPoison.Response{body: body}} ->
-          CensysEx.Util.parse_body(body)
+          Util.parse_body(body)
 
         {:error, %HTTPoison.Error{reason: reason}} ->
           {:error, reason}

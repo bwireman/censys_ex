@@ -1,9 +1,7 @@
 defmodule CensysEx.Util do
   @moduledoc false
 
-  def get_client do
-    Application.get_env(:censys_ex, :client, CensysEx.API)
-  end
+  def get_client, do: Application.get_env(:censys_ex, :client, CensysEx.API)
 
   @spec parse_body(String.t()) :: {:error, any} | {:ok, map}
   def parse_body(body) do
