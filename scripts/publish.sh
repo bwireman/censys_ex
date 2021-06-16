@@ -11,8 +11,8 @@ if [ -z "$VER" ]; then
 fi
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-if [[ "$BRANCH" != "main" ]]; then
-    echo "Branch must be 'main'";
+if [ "$BRANCH" != "main" ]; then
+    echo "Branch must be 'main'"
     exit 1
 fi
 
@@ -22,11 +22,11 @@ if [ ! -z "$(git status --porcelain)" ]; then
 fi
 
 function publish {
-    echo "Publishing to Hex" "$VER"
-    mix hex.publish
     echo "Tagging" "$VER"
     git tag "$VER"
     git push origin "$VER"
+    echo "Publishing to Hex" "$VER"
+    mix hex.publish
     echo "🚀"
 }
 
