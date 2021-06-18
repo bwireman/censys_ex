@@ -18,7 +18,7 @@ Available in [Hex](https://hex.pm/packages/censys_ex), the package can be instal
 ```elixir
 def deps do
   [
-    {:censys_ex, "~> 0.1.2"}
+    {:censys_ex, "~> 0.1.3"}
   ]
 end
 ```
