@@ -5,7 +5,7 @@ defmodule CensysEx.Util do
 
   @spec parse_body(String.t()) :: {:error, any} | {:ok, map}
   def parse_body(body) do
-    case Poison.decode(body) do
+    case Jason.decode(body) do
       {:ok, decoded} ->
         case Map.get(decoded, "code") do
           code when code >= 400 -> {:error, Map.get(decoded, "error", "Unknown Error occurred")}

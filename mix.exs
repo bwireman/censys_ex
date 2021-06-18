@@ -31,7 +31,7 @@ defmodule CensysEx.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.8"},
-      {:poison, "~> 4.0"},
+      {:jason, "~> 1.2"},
       {:timex, "~> 3.0"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
