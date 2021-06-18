@@ -10,6 +10,7 @@ defmodule CensysEx.API do
 
   @id_var "CENSYS_API_ID"
   @secret_var "CENSYS_API_SECRET"
+  @creds "CENSYS_API_CREDS"
 
   # api
 
@@ -68,17 +69,27 @@ defmodule CensysEx.API do
   defp build_path(resource, action),
     do: "https://search.censys.io/api/v2/" <> resource <> "/" <> action
 
+  defp get_creds do
+    case :ets.lookup(__MODULE__, @creds) do
+      [head | _] -> head |> elem(1)
+    end
+  end
+
   # impl
 
   @doc false
   @impl true
-  def init({id, secret}), do: {:ok, {id, secret}}
+  def init({id, secret}) do
+    :ets.new(__MODULE__, [:set, :named_table, :private])
+    :ets.insert(__MODULE__, {@creds, {id, secret}})
+    {:ok, nil}
+  end
 
   @doc false
   @impl true
-  def handle_call({:get, {resource, action, headers, options}}, _from, {id, secret}) do
+  def handle_call({:get, {resource, action, headers, options}}, _from, nil) do
     path = build_path(resource, action)
-    basic_auth = {id, secret}
+    basic_auth = get_creds()
 
     options =
       Keyword.update(
@@ -99,7 +110,7 @@ defmodule CensysEx.API do
           {:error, reason}
       end
 
-    {:reply, resp, {id, secret}}
+    {:reply, resp, nil}
   end
 
   @impl true
