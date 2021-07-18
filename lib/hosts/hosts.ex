@@ -44,6 +44,24 @@ defmodule CensysEx.Hosts do
     do: Util.get_client().view(@index, ip, at_time)
 
   @doc """
+  Hits the Censys Hosts view names API. Returning a stream of names for that IP.
+
+  - API docs: https://search.censys.io/api#/hosts/viewHostNames
+
+  ## Examples
+
+  ```
+  CensysEx.Hosts.names("127.0.0.1")
+  ```
+  """
+  def names(ip) do
+    next = fn params -> Util.get_client().get(@index, ip <> "/names", [], params) end
+    extractor = fn client -> get_in(client.results, ["result", "names"]) end
+
+    CensysEx.Paginate.stream(next, extractor)
+  end
+
+  @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
 
   - API docs: https://search.censys.io/api/docs/v2/hosts/aggregate

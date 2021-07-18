@@ -49,6 +49,35 @@ defmodule CensysExHostTest do
     assert length(buckets) == 200
   end
 
+  # --- names ---
+  test "can stream names on a host" do
+    CensysEx.ApiMock
+    |> expect(:get, 1, fn _, _, _, _ ->
+      CensysEx.TestHelpers.load_response("1.1.1.1-names")
+    end)
+
+    hits =
+      CensysEx.Hosts.names("1.1.1.1")
+      |> Stream.take(100)
+      |> Enum.to_list()
+
+    assert length(hits) == 100
+  end
+
+  test "can stream names on a host getting multiple pages" do
+    CensysEx.ApiMock
+    |> expect(:get, 2, fn _, _, _, _ ->
+      CensysEx.TestHelpers.load_response("1.1.1.1-names")
+    end)
+
+    hits =
+      CensysEx.Hosts.names("1.1.1.1")
+      |> Stream.take(150)
+      |> Enum.to_list()
+
+    assert length(hits) == 150
+  end
+
   # --- search ---
   test "can stream search results" do
     CensysEx.ApiMock
