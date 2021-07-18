@@ -1,6 +1,7 @@
 defmodule CensysEx.Util do
   @moduledoc false
 
+  @spec get_client() :: atom()
   def get_client, do: Application.get_env(:censys_ex, :client, CensysEx.API)
 
   @spec parse_body(String.t()) :: {:error, any} | {:ok, map}

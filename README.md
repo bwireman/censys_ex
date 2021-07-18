@@ -53,14 +53,25 @@ CensysEx.Hosts.view("127.0.0.1")
 CensysEx.Hosts.view("127.0.0.1", ~U[2021-06-07 12:53:27.450073Z])
 ```
 
+# Names
+
+Returns a stream of names for that IP.
+
+```elixir
+iex(1)> CensysEx.Hosts.names("127.0.0.1") |>
+...(1)> Stream.take(25) |>
+...(1)> Enum.to_list()
+["example.com", "foo.net", ...]
+```
+
 # Search
 Search returns a stream of results using the cursors provided by the API.
 
 ```elixir
-iex(1)>  CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)")
-...(1)> |> Stream.take(25)
-...(1)> |> Stream.map(&Map.get(&1, "ip"))
-...(1)> |> Enum.to_list()
+iex(1)>  CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)") |>
+...(1)> Stream.take(25) |>
+...(1)> Stream.map(&Map.get(&1, "ip")) |>
+...(1)> Enum.to_list()
 ["10.0.0.6", "10.2.0.1", ...]
 ```
 
@@ -75,9 +86,10 @@ CensysEx.Hosts.aggregate("location.country_code", "services.service_name: MEMCAC
 ```
 ---
 ## Docs
-- [view](https://search.censys.io/api/docs/v2/hosts/view)
-- [aggregate](https://search.censys.io/api/docs/v2/hosts/aggregate)
-- [search](https://search.censys.io/api/docs/v2/search)
+- [view](https://search.censys.io/api#/hosts/viewHost)
+- [names](https://search.censys.io/api#/hosts/viewHostNames)
+- [aggregate](https://search.censys.io/api#/hosts/aggregateHosts)
+- [search](https://search.censys.io/api#/hosts/searchHosts)
 - [search-syntax](https://search.censys.io/search/language?resource=hosts)
 
 ## Other Languages

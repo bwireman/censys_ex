@@ -2,14 +2,15 @@ defmodule CensysEx.Hosts do
   @moduledoc """
   CensysEx wrapper for the search.censys.io v2 API for the "hosts" resource
   """
-  alias CensysEx.{Search, Util}
+  alias CensysEx.{Paginate, Search, Util}
 
   @index "hosts"
 
   @doc """
   Hits the Censys Hosts search API. Returns a stream of results for you query
 
-    - API docs: https://search.censys.io/api/docs/v2/search
+    - API docs: https://search.censys.io/api#/hosts/searchHosts
+    - Syntax: https://search.censys.io/search/language?resource=hosts
 
   ## Examples
 
@@ -28,7 +29,7 @@ defmodule CensysEx.Hosts do
   Hits the Censys Hosts view API. Returning full
   information about an IP at a given time
 
-  - API docs: https://search.censys.io/api/docs/v2/hosts/view
+  - API docs: https://search.censys.io/api#/hosts/viewHost
 
   ## Examples
 
@@ -58,13 +59,13 @@ defmodule CensysEx.Hosts do
     next = fn params -> Util.get_client().get(@index, ip <> "/names", [], params) end
     extractor = fn client -> get_in(client.results, ["result", "names"]) end
 
-    CensysEx.Paginate.stream(next, extractor)
+    Paginate.stream(next, extractor)
   end
 
   @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
 
-  - API docs: https://search.censys.io/api/docs/v2/hosts/aggregate
+  - API docs: https://search.censys.io/api#/hosts/aggregateHosts
 
   ## Examples
 
