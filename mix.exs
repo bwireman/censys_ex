@@ -32,7 +32,7 @@ defmodule CensysEx.MixProject do
     [
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
-      {:timex, "~> 3.0"},
+      {:timex, "~> 3.7"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
       {:ex_doc, "~> 0.24.2", only: :dev, runtime: false}
