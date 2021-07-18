@@ -22,7 +22,7 @@ defmodule CensysEx.Hosts do
   ```
   """
   def search(query \\ "", per_page \\ 100),
-    do: Search.start(@index, query, per_page)
+    do: Search.search(@index, query, per_page)
 
   @doc """
   Hits the Censys Hosts view API. Returning full
