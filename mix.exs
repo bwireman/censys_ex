@@ -1,7 +1,7 @@
 defmodule CensysEx.MixProject do
   use Mix.Project
 
-  @pkg_version "0.2.0"
+  @pkg_version "1.0.0"
 
   def project do
     [
