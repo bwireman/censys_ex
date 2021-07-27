@@ -63,6 +63,34 @@ defmodule CensysEx.Hosts do
   end
 
   @doc """
+  Hits the Censys Hosts diff API.
+
+  - API docs: https://search.censys.io/api#/hosts/viewHostDiff
+
+  ## Examples
+
+  ```
+  # diff the current host with it self 🤷
+  CensysEx.Hosts.diff("8.8.8.8")
+
+  # diff two hosts
+  CensysEx.Hosts.diff("8.8.8.8", "1.1.1.1")
+
+  # diff a host with itself at a time in the past
+  CensysEx.Hosts.diff("8.8.8.8", nil, ~U[2021-06-07 12:53:27.450073Z])
+
+  # diff two hosts in the past
+  CensysEx.Hosts.diff("8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[2021-06-07 12:53:27.450073Z])
+  ```
+  """
+  @spec diff(String.t(), String.t(), DateTime.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
+  def diff(ip, ip_b \\ nil, at_time \\ nil, at_time_b \\ nil),
+    do:
+      Util.get_client().get(@index, ip <> "/diff", [],
+        params: Util.build_diff_params(ip_b, at_time, at_time_b)
+      )
+
+  @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
 
   - API docs: https://search.censys.io/api#/hosts/aggregateHosts

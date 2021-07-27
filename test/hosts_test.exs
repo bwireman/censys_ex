@@ -55,6 +55,38 @@ defmodule CensysExHostTest do
     assert length(buckets) == 200
   end
 
+  # --- diff ---
+  test "can diff hosts" do
+    CensysEx.ApiMock
+    |> expect(:get, fn "hosts", "8.8.8.8/diff", [], [params: [ip_b: "1.1.1.1"]] ->
+      CensysEx.TestHelpers.load_response("diff-8.8.8.8-1.1.1.1")
+    end)
+
+    {:ok, resp} = CensysEx.Hosts.diff("8.8.8.8", "1.1.1.1")
+    res = resp["result"]
+
+    a = res["a"]
+    assert a["ip"] == "8.8.8.8"
+    assert a["last_updated_at"] == "2021-07-27T21:42:04.410Z"
+
+    b = res["b"]
+    assert b["ip"] == "1.1.1.1"
+    assert b["last_updated_at"] == "2021-07-27T22:00:41.524Z"
+
+    patch = res["patch"]
+    assert is_list(patch)
+  end
+
+  test "can diff hosts at times" do
+    CensysEx.ApiMock
+    |> expect(:get, fn "hosts", "8.8.8.8/diff", [], [params: [at_time: "2021-08-27T12:53:27"]] ->
+      # doesn't matter testing params
+      CensysEx.TestHelpers.load_response("diff-8.8.8.8-1.1.1.1")
+    end)
+
+    assert {:ok, _} = CensysEx.Hosts.diff("8.8.8.8", nil, ~U[2021-08-27 12:53:27.450073Z])
+  end
+
   # --- names ---
   test "can stream names on a host" do
     CensysEx.ApiMock

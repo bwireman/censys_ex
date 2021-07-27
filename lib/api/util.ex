@@ -1,6 +1,8 @@
 defmodule CensysEx.Util do
   @moduledoc false
 
+  @at_time_format "%Y-%m-%dT%H:%M:%S"
+
   @spec get_client() :: atom()
   def get_client, do: Application.get_env(:censys_ex, :client, CensysEx.API)
 
@@ -23,7 +25,7 @@ defmodule CensysEx.Util do
   def build_view_params(at_time) do
     case at_time do
       nil -> []
-      _ -> [at_time: Timex.format!(at_time, "%Y-%m-%dT%H:%M:%S", :strftime)]
+      _ -> [at_time: Timex.format!(at_time, @at_time_format, :strftime)]
     end
   end
 
@@ -32,4 +34,14 @@ defmodule CensysEx.Util do
     params = [field: field, num_buckets: num_buckets]
     if(query != nil, do: [{:q, query} | params], else: params)
   end
+
+  @spec build_diff_params(String.t(), DateTime.t(), DateTime.t()) :: keyword() | []
+  def build_diff_params(ip_b, at_time, at_time_b) do
+    params = if(ip_b, do: [ip_b: ip_b], else: Keyword.new())
+    params = if(at_time, do: [{:at_time, format_datetime!(at_time)} | params], else: params)
+
+    if(at_time_b, do: [{:at_time_b, format_datetime!(at_time_b)} | params], else: params)
+  end
+
+  defp format_datetime!(at_time), do: Timex.format!(at_time, @at_time_format, :strftime)
 end
