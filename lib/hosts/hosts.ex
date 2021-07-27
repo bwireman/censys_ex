@@ -57,7 +57,7 @@ defmodule CensysEx.Hosts do
   """
   def names(ip) do
     next = fn params -> Util.get_client().get(@index, ip <> "/names", [], params) end
-    extractor = fn client -> get_in(client.results, ["result", "names"]) end
+    extractor = fn client = %Paginate{} -> get_in(client.results, ["result", "names"]) end
 
     Paginate.stream(next, extractor)
   end

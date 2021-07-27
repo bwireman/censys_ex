@@ -27,6 +27,7 @@ defmodule CensysEx.Paginate do
   function that takes in a keyword list of query params and returns either a map of results or an error
   """
   @type next_page_fn :: (Keyword.t() -> {:ok, map()} | {:error, any})
+
   def stream(next_fn, results_fn, params \\ Keyword.new()) do
     client = %CensysEx.Paginate{
       next_fn: next_fn,
@@ -71,7 +72,7 @@ defmodule CensysEx.Paginate do
 
       case client.next_fn.(params) do
         {:ok, body} ->
-          %{"result" => %{"links" => %{"next" => next_cursor}}} = body
+          next_cursor = get_in(body, ["result", "links", "next"])
           iterate_page(client, body, next_cursor)
 
         {:error, err} ->
