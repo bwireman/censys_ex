@@ -7,7 +7,7 @@ defmodule CensysEx.Hosts do
   @index "hosts"
 
   @doc """
-  Hits the Censys Hosts search API. Returns a stream of results for you query
+  Hits the Censys Hosts search API. Returns a stream of results for your query
 
     - API docs: https://search.censys.io/api#/hosts/searchHosts
     - Syntax: https://search.censys.io/search/language?resource=hosts
@@ -85,10 +85,7 @@ defmodule CensysEx.Hosts do
   """
   @spec diff(String.t(), String.t(), DateTime.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
   def diff(ip, ip_b \\ nil, at_time \\ nil, at_time_b \\ nil),
-    do:
-      Util.get_client().get(@index, ip <> "/diff", [],
-        params: Util.build_diff_params(ip_b, at_time, at_time_b)
-      )
+    do: Util.get_client().get(@index, ip <> "/diff", [], params: Util.build_diff_params(ip_b, at_time, at_time_b))
 
   @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
