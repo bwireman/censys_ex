@@ -55,10 +55,7 @@ defmodule CensysEx.API do
   @spec aggregate(String.t(), String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
   @impl true
   def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
-    do:
-      get(resource, "aggregate", [],
-        params: Util.build_aggregate_params(field, query, num_buckets)
-      )
+    do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets))
 
   @spec get(String.t(), String.t(), list(), keyword()) :: {:error, any()} | {:ok, map()}
   @impl true
