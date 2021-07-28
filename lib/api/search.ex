@@ -12,5 +12,5 @@ defmodule CensysEx.Search do
     do: get_in(client.results, ["result", "hits"])
 
   defp gen_search_fn(index),
-    do: fn params -> Util.get_client().get(index, "search", [], params: params) end
+    do: fn params -> Util.get_client().get(index, "search", [], params) end
 end

@@ -70,7 +70,7 @@ defmodule CensysEx.Paginate do
           cursor -> [cursor: cursor] ++ client.params
         end
 
-      case client.next_fn.(params) do
+      case client.next_fn.(params: params) do
         {:ok, body} ->
           next_cursor = get_in(body, ["result", "links", "next"])
           iterate_page(client, body, next_cursor)
