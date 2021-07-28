@@ -9,7 +9,9 @@ defmodule CensysExHostTest do
   # --- view ---
   test "can view hosts" do
     CensysEx.ApiMock
-    |> expect(:view, fn _, _, _ -> CensysEx.TestHelpers.load_response("1.1.1.1") end)
+    |> expect(:view, fn "hosts", "1.1.1.1", nil ->
+      CensysEx.TestHelpers.load_response("1.1.1.1")
+    end)
 
     {:ok, resp} = CensysEx.Hosts.view("1.1.1.1")
 
@@ -28,7 +30,9 @@ defmodule CensysExHostTest do
 
   test "can view hosts at a time in the past" do
     CensysEx.ApiMock
-    |> expect(:view, fn _, _, _ -> CensysEx.TestHelpers.load_response("1.1.1.1") end)
+    |> expect(:view, fn "hosts", "1.1.1.1", ~U[2021-06-07 12:53:27.450073Z] ->
+      CensysEx.TestHelpers.load_response("1.1.1.1")
+    end)
 
     {:ok, resp} = CensysEx.Hosts.view("1.1.1.1", ~U[2021-06-07 12:53:27.450073Z])
 
@@ -41,7 +45,9 @@ defmodule CensysExHostTest do
   # --- aggregate ---
   test "can aggregate hosts" do
     CensysEx.ApiMock
-    |> expect(:aggregate, fn _, _, _, _ -> CensysEx.TestHelpers.load_response("aggregate") end)
+    |> expect(:aggregate, fn "hosts", "service.port", nil, 50 ->
+      CensysEx.TestHelpers.load_response("aggregate")
+    end)
 
     {:ok, resp} = CensysEx.Hosts.aggregate("service.port")
     res = resp["result"]
@@ -52,7 +58,7 @@ defmodule CensysExHostTest do
   # --- names ---
   test "can stream names on a host" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn _, _, _, _ ->
+    |> expect(:get, 1, fn "hosts", "1.1.1.1/names", [], params: [] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-names")
     end)
 
@@ -66,7 +72,10 @@ defmodule CensysExHostTest do
 
   test "can stream names on a host getting multiple pages" do
     CensysEx.ApiMock
-    |> expect(:get, 2, fn _, _, _, _ ->
+    |> expect(:get, 1, fn "hosts", "1.1.1.1/names", [], params: [] ->
+      CensysEx.TestHelpers.load_response("1.1.1.1-names")
+    end)
+    |> expect(:get, 1, fn "hosts", "1.1.1.1/names", [], params: [cursor: "deadbeef"] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-names")
     end)
 
@@ -81,7 +90,21 @@ defmodule CensysExHostTest do
   # --- search ---
   test "can stream search results" do
     CensysEx.ApiMock
-    |> expect(:get, 3, fn _, _, _, _ ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: HTTP", per_page: 100] ->
+      CensysEx.TestHelpers.load_response("search")
+    end)
+    |> expect(:get, 2, fn "hosts",
+                          "search",
+                          [],
+                          params: [
+                            cursor:
+                              "eyJBZnRlciI6WyIxOC4zNDg4ODMiLCIxNDcuNzguNjAuNDUiXSwiUmV2ZXJzZSI6ZmFsc2V9",
+                            q: "services.service_name: HTTP",
+                            per_page: 100
+                          ] ->
       CensysEx.TestHelpers.load_response("search")
     end)
 
@@ -95,7 +118,10 @@ defmodule CensysExHostTest do
 
   test "can end early if no next in stream of search results" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn _, _, _, _ ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100] ->
       CensysEx.TestHelpers.load_response("search-cutoff")
     end)
 
@@ -109,7 +135,10 @@ defmodule CensysExHostTest do
 
   test "can end early if take less than total in stream of search results" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn _, _, _, _ ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100] ->
       CensysEx.TestHelpers.load_response("search")
     end)
 
@@ -123,7 +152,10 @@ defmodule CensysExHostTest do
 
   test "search raises when unauthorized" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn _, _, _, _ ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100] ->
       CensysEx.TestHelpers.load_response("unauthorized")
     end)
 

@@ -6,10 +6,7 @@ defmodule CensysEx.Search do
   alias CensysEx.{Paginate, Util}
 
   def search(index, query \\ "", per_page \\ 100),
-    do:
-      Paginate.stream(gen_search_fn(index), &get_hits/1, %{
-        params: [q: query, per_page: per_page]
-      })
+    do: Paginate.stream(gen_search_fn(index), &get_hits/1, q: query, per_page: per_page)
 
   defp get_hits(%Paginate{} = client),
     do: get_in(client.results, ["result", "hits"])
