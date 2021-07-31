@@ -36,7 +36,7 @@ defmodule CensysEx.MixProject do
       {:timex, "~> 3.7"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
-      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.25.0", only: :dev, runtime: false}
     ]
   end
