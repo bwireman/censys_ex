@@ -28,6 +28,7 @@ defmodule CensysEx.Paginate do
   """
   @type next_page_fn :: (Keyword.t() -> {:ok, map()} | {:error, any})
 
+  @spec stream(next_page_fn(), result_extractor(), keyword()) :: Enumerable.t()
   def stream(next_fn, results_fn, params \\ Keyword.new()) do
     client = %CensysEx.Paginate{
       next_fn: next_fn,

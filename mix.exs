@@ -18,7 +18,8 @@ defmodule CensysEx.MixProject do
       description: description(),
       source_url: "https://github.com/bwireman/censys_ex",
       homepage_url: "https://hexdocs.pm/censys_ex/readme.html",
-      package: package()
+      package: package(),
+      dialyzer: dialyzer()
     ]
   end
 
@@ -35,6 +36,7 @@ defmodule CensysEx.MixProject do
       {:timex, "~> 3.7"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
+      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.25.0", only: :dev, runtime: false}
     ]
   end
@@ -44,9 +46,19 @@ defmodule CensysEx.MixProject do
       quality: [
         "clean",
         "compile --warnings-as-errors",
+        "format --check-formatted",
         "credo --strict",
+        "dialyzer",
         "run -e 'IO.puts(\"LGTM 🤘!\")'"
       ]
+    ]
+  end
+
+  defp dialyzer() do
+    [
+      flags: ["-Wunmatched_returns", :error_handling, :underspecs],
+      plt_core_path: "priv/plts",
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 
