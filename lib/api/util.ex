@@ -3,7 +3,7 @@ defmodule CensysEx.Util do
 
   @at_time_format "%Y-%m-%dT%H:%M:%S"
 
-  @spec get_client() :: atom()
+  @spec get_client() :: CensysEx.APIBehavior.t()
   def get_client, do: Application.get_env(:censys_ex, :client, CensysEx.API)
 
   @spec parse_body(String.t()) :: {:error, any} | {:ok, map}
@@ -21,7 +21,7 @@ defmodule CensysEx.Util do
     end
   end
 
-  @spec build_view_params(DateTime.t()) :: [{:at_time, String.t()}] | []
+  @spec build_view_params(DateTime.t() | nil) :: [{:at_time, String.t()}] | []
   def build_view_params(at_time) do
     case at_time do
       nil -> []
@@ -29,13 +29,13 @@ defmodule CensysEx.Util do
     end
   end
 
-  @spec build_aggregate_params(String.t(), String.t(), integer()) :: keyword()
+  @spec build_aggregate_params(String.t(), String.t() | nil, integer()) :: keyword()
   def build_aggregate_params(field, query, num_buckets) do
     params = [field: field, num_buckets: num_buckets]
     if(query != nil, do: [{:q, query} | params], else: params)
   end
 
-  @spec build_diff_params(String.t(), DateTime.t(), DateTime.t()) :: keyword() | []
+  @spec build_diff_params(String.t() | nil, DateTime.t() | nil, DateTime.t() | nil) :: keyword() | []
   def build_diff_params(ip_b, at_time, at_time_b) do
     params = if(ip_b, do: [ip_b: ip_b], else: Keyword.new())
     params = if(at_time, do: [{:at_time, format_datetime!(at_time)} | params], else: params)

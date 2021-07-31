@@ -22,6 +22,7 @@ defmodule CensysEx.Hosts do
   ["10.0.0.6", "10.2.0.1", ...]
   ```
   """
+  @spec search(String.t(), integer()) :: Enumerable.t()
   def search(query \\ "", per_page \\ 100),
     do: Search.search(@index, query, per_page)
 
@@ -40,7 +41,7 @@ defmodule CensysEx.Hosts do
   CensysEx.Hosts.view("127.0.0.1", ~U[2021-06-07 12:53:27.450073Z])
   ```
   """
-  @spec view(String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
+  @spec view(String.t(), DateTime.t() | nil) :: {:error, any()} | {:ok, map()}
   def view(ip, at_time \\ nil),
     do: Util.get_client().view(@index, ip, at_time)
 
@@ -55,6 +56,7 @@ defmodule CensysEx.Hosts do
   CensysEx.Hosts.names("127.0.0.1")
   ```
   """
+  @spec names(String.t()) :: Enumerable.t()
   def names(ip) do
     next = fn params -> Util.get_client().get(@index, ip <> "/names", [], params) end
     extractor = fn client = %Paginate{} -> get_in(client.results, ["result", "names"]) end
@@ -83,7 +85,7 @@ defmodule CensysEx.Hosts do
   CensysEx.Hosts.diff("8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[2021-06-07 12:53:27.450073Z])
   ```
   """
-  @spec diff(String.t(), String.t(), DateTime.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
+  @spec diff(String.t(), String.t() | nil, DateTime.t() | nil, DateTime.t() | nil) :: {:error, any()} | {:ok, map()}
   def diff(ip, ip_b \\ nil, at_time \\ nil, at_time_b \\ nil),
     do: Util.get_client().get(@index, ip <> "/diff", [], params: Util.build_diff_params(ip_b, at_time, at_time_b))
 
@@ -100,7 +102,7 @@ defmodule CensysEx.Hosts do
   CensysEx.Hosts.aggregate("location.country_code", "services.service_name: MEMCACHED", 1000)
   ```
   """
-  @spec aggregate(String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
+  @spec aggregate(String.t(), String.t() | nil, integer()) :: {:error, any()} | {:ok, map()}
   def aggregate(field, query \\ nil, num_buckets \\ 50),
     do: Util.get_client().aggregate(@index, field, query, num_buckets)
 end

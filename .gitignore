@@ -23,3 +23,5 @@ erl_crash.dump
 censys_ex-*.tar
 
 .vscode/*
+
+priv/plts

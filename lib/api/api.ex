@@ -47,12 +47,12 @@ defmodule CensysEx.API do
     end
   end
 
-  @spec view(String.t(), String.t(), DateTime.t()) :: {:error, any()} | {:ok, map()}
+  @spec view(String.t(), String.t(), DateTime.t() | nil) :: {:error, any()} | {:ok, map()}
   @impl true
   def view(resource, id, at_time \\ nil),
     do: get(resource, id, [], params: Util.build_view_params(at_time))
 
-  @spec aggregate(String.t(), String.t(), String.t(), integer()) :: {:error, any()} | {:ok, map()}
+  @spec aggregate(String.t(), String.t(), String.t() | nil, integer()) :: {:error, any()} | {:ok, map()}
   @impl true
   def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
     do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets))
@@ -77,7 +77,7 @@ defmodule CensysEx.API do
   @doc false
   @impl true
   def init({id, secret}) do
-    :ets.new(__MODULE__, [:set, :named_table, :private])
+    __MODULE__ = :ets.new(__MODULE__, [:set, :named_table, :private])
     :ets.insert(__MODULE__, {@creds, {id, secret}})
     {:ok, nil}
   end
