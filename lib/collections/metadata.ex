@@ -10,6 +10,6 @@ defmodule CensysEx.Metadata do
 
   - API docs: https://search.censys.io/api#/hosts/getHostMetadata
   """
-  @spec hosts_metadata :: {:error, any()} | {:ok, map()}
+  @spec hosts_metadata :: CensysEx.result()
   def hosts_metadata, do: Util.get_client().get("metadata", "hosts", [], [])
 end

@@ -1,4 +1,5 @@
 defmodule CensysEx.TestHelpers do
+  @spec load_response(String.t()) :: CensysEx.result()
   def load_response(file_name) do
     case File.read("./test/responses/" <> file_name <> ".json") do
       {:ok, body} ->

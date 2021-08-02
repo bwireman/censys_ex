@@ -48,7 +48,7 @@ defmodule CensysEx.MixProject do
         "compile --warnings-as-errors",
         "format --check-formatted",
         "credo --strict",
-        "dialyzer",
+        "dialyzer --quiet",
         "run -e 'IO.puts(\"LGTM 🤘!\")'"
       ]
     ]

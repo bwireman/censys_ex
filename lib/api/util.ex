@@ -1,6 +1,7 @@
 defmodule CensysEx.Util do
   @moduledoc false
 
+  # RFC3339 format
   @at_time_format "%Y-%m-%dT%H:%M:%S"
 
   @spec get_client() :: CensysEx.APIBehavior.t()
@@ -35,13 +36,14 @@ defmodule CensysEx.Util do
     if(query != nil, do: [{:q, query} | params], else: params)
   end
 
-  @spec build_diff_params(String.t() | nil, DateTime.t() | nil, DateTime.t() | nil) :: keyword() | []
+  @spec build_diff_params(String.t() | nil, DateTime.t() | nil, DateTime.t() | nil) ::
+          keyword() | []
   def build_diff_params(ip_b, at_time, at_time_b) do
-    params = if(ip_b, do: [ip_b: ip_b], else: Keyword.new())
-    params = if(at_time, do: [{:at_time, format_datetime!(at_time)} | params], else: params)
-
-    if(at_time_b, do: [{:at_time_b, format_datetime!(at_time_b)} | params], else: params)
+    if(ip_b, do: [ip_b: ip_b], else: Keyword.new()) ++
+      if(at_time, do: [at_time: format_datetime!(at_time)], else: Keyword.new()) ++
+      if(at_time_b, do: [at_time_b: format_datetime!(at_time_b)], else: Keyword.new())
   end
 
+  @spec format_datetime!(DateTime.t()) :: String.t()
   defp format_datetime!(at_time), do: Timex.format!(at_time, @at_time_format, :strftime)
 end
