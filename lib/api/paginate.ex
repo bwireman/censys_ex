@@ -26,9 +26,9 @@ defmodule CensysEx.Paginate do
   @typedoc """
   function that takes in a keyword list of query params and returns either a map of results or an error
   """
-  @type next_page_fn :: (Keyword.t() -> {:ok, map()} | {:error, any})
+  @type next_page_fn :: (Keyword.t() -> CensysEx.result())
 
-  @spec stream(next_page_fn(), result_extractor(), keyword()) :: Enumerable.t()
+  @spec stream(next_page_fn(), result_extractor(), keyword()) :: CensysEx.result_stream(any())
   def stream(next_fn, results_fn, params \\ Keyword.new()) do
     client = %CensysEx.Paginate{
       next_fn: next_fn,
@@ -57,10 +57,12 @@ defmodule CensysEx.Paginate do
   end
 
   # updates Paginate struct with results cursor and page index from next request
+  @spec iterate_page(t()) :: t()
   defp iterate_page(%CensysEx.Paginate{} = client, body \\ %{}, cursor \\ ""),
     do: %{client | results: body, cursor: cursor, page: client.page + 1}
 
   # build query params and calls client.next_fn and paginates to the next page
+  @spec search_internal!(t()) :: t() | no_return()
   defp search_internal!(%CensysEx.Paginate{} = client) do
     if client.page > 0 and client.cursor == "" do
       iterate_page(client)

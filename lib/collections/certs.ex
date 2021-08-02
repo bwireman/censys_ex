@@ -22,7 +22,7 @@ defmodule CensysEx.Certs do
   ["10.0.0.6", "10.2.0.1", ...]
   ```
   """
-  @spec get_hosts_by_cert(String.t()) :: Enumerable.t()
+  @spec get_hosts_by_cert(String.t()) :: CensysEx.result_stream(map())
   def get_hosts_by_cert(fp) do
     next = fn params -> Util.get_client().get(@index, fp <> "/hosts", [], params) end
     extractor = fn client = %Paginate{} -> get_in(client.results, ["result", "hosts"]) end

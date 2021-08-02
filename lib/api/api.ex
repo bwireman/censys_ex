@@ -1,12 +1,12 @@
 defmodule CensysEx.API do
+  @moduledoc """
+  Base Wrapper for search.censys.io v2 APIs
+  """
+
   @behaviour CensysEx.APIBehavior
   use GenServer
 
   alias CensysEx.Util
-
-  @moduledoc """
-  Base Wrapper for search.censys.io v2 APIs
-  """
 
   @id_var "CENSYS_API_ID"
   @secret_var "CENSYS_API_SECRET"
@@ -24,6 +24,7 @@ defmodule CensysEx.API do
   {:error, "CENSYS_API_ID missing!"}
   ```
   """
+  @spec start_link() :: GenServer.on_start()
   def start_link do
     id = System.get_env(@id_var, "")
     secret = System.get_env(@secret_var, "")
@@ -39,6 +40,7 @@ defmodule CensysEx.API do
   {:ok, _} = CensysEx.API.start_link("***********", "***********")
   ```
   """
+  @spec start_link(String.t(), String.t()) :: GenServer.on_start()
   def start_link(id, secret) do
     case {id, secret} do
       {"", _} -> {:error, @id_var <> " missing!"}
@@ -47,25 +49,28 @@ defmodule CensysEx.API do
     end
   end
 
-  @spec view(String.t(), String.t(), DateTime.t() | nil) :: {:error, any()} | {:ok, map()}
-  @impl true
+  @spec view(String.t(), String.t(), DateTime.t() | nil) :: CensysEx.result()
+  @impl CensysEx.APIBehavior
   def view(resource, id, at_time \\ nil),
     do: get(resource, id, [], params: Util.build_view_params(at_time))
 
-  @spec aggregate(String.t(), String.t(), String.t() | nil, integer()) :: {:error, any()} | {:ok, map()}
-  @impl true
+  @spec aggregate(String.t(), String.t(), String.t() | nil, integer()) ::
+          CensysEx.result()
+  @impl CensysEx.APIBehavior
   def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
     do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets))
 
-  @spec get(String.t(), String.t(), list(), keyword()) :: {:error, any()} | {:ok, map()}
-  @impl true
+  @spec get(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
+  @impl CensysEx.APIBehavior
   def get(resource, action, headers \\ [], options \\ []),
     do: GenServer.call(__MODULE__, {:get, {resource, action, headers, options}}, 10_000)
 
   # util
+  @spec build_path(String.t(), String.t()) :: String.t()
   defp build_path(resource, action),
     do: "https://search.censys.io/api/v2/" <> resource <> "/" <> action
 
+  @spec get_creds() :: tuple()
   defp get_creds do
     case :ets.lookup(__MODULE__, @creds) do
       [head | _] -> head |> elem(1)
@@ -75,7 +80,7 @@ defmodule CensysEx.API do
   # impl
 
   @doc false
-  @impl true
+  @impl GenServer
   def init({id, secret}) do
     __MODULE__ = :ets.new(__MODULE__, [:set, :named_table, :private])
     :ets.insert(__MODULE__, {@creds, {id, secret}})
@@ -83,7 +88,7 @@ defmodule CensysEx.API do
   end
 
   @doc false
-  @impl true
+  @impl GenServer
   def handle_call({:get, {resource, action, headers, options}}, _from, nil) do
     path = build_path(resource, action)
     basic_auth = get_creds()
@@ -110,7 +115,7 @@ defmodule CensysEx.API do
     {:reply, resp, nil}
   end
 
-  @impl true
+  @impl GenServer
   def handle_info(_, state) do
     {:noreply, state}
   end
