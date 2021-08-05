@@ -45,6 +45,11 @@ iex(1)> CensysEx.API.start_link("*****", "*****")
 {:ok, #PID<0.252.0>}
 ```
 
+```elixir
+iex(1)> CensysEx.API.start_link([id: "*****", secret: "*****"])
+{:ok, #PID<0.252.0>}
+```
+
 API secrets can be found [here](https://search.censys.io/account/api)
 
 ## Hosts
@@ -76,7 +81,7 @@ iex(1)> CensysEx.Hosts.names("127.0.0.1") |>
 Search returns a stream of results using the cursors provided by the API.
 
 ```elixir
-iex(1)>  CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)") |>
+iex(1)> CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)") |>
 ...(1)> Stream.take(25) |>
 ...(1)> Stream.map(&Map.get(&1, "ip")) |>
 ...(1)> Enum.to_list()
@@ -142,7 +147,7 @@ CensysEx.Certs.get_hosts_by_cert("fb444eb8e68437bae06232b9f5091bccff62a768ca09e9
 
 ```elixir
 CensysEX.Metadata.host_metadata()
-%{
+{:ok, %{
   "code": 200,
   "status": "OK",
   "result": {
@@ -154,7 +159,7 @@ CensysEX.Metadata.host_metadata()
       "..."
     ]
   }
-}
+}}
 ```
 
 ### Metadata API Docs
