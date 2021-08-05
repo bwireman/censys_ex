@@ -37,6 +37,22 @@ defmodule CensysEx.API do
 
   ## Examples
   ```
+  {:ok, _} = CensysEx.API.start_link([id: "***********", secret: "***********"])
+  ```
+  """
+  @spec start_link(keyword(String.t())) :: GenServer.on_start()
+  def start_link(creds) do
+    id = Access.get(creds, :id, "")
+    secret = Access.get(creds, :secret, "")
+
+    CensysEx.API.start_link(id, secret)
+  end
+
+  @doc """
+  Starts the CensysEx.API process
+
+  ## Examples
+  ```
   {:ok, _} = CensysEx.API.start_link("***********", "***********")
   ```
   """
