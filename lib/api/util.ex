@@ -38,11 +38,19 @@ defmodule CensysEx.Util do
 
   @spec build_diff_params(String.t() | nil, DateTime.t() | nil, DateTime.t() | nil) ::
           keyword() | []
-  def build_diff_params(ip_b, at_time, at_time_b) do
-    if(ip_b, do: [ip_b: ip_b], else: Keyword.new()) ++
-      if(at_time, do: [at_time: format_datetime!(at_time)], else: Keyword.new()) ++
-      if(at_time_b, do: [at_time_b: format_datetime!(at_time_b)], else: Keyword.new())
-  end
+  def build_diff_params(ip_b, at_time, at_time_b),
+    do:
+      if(ip_b, do: [ip_b: ip_b], else: Keyword.new()) ++
+        if(at_time, do: [at_time: format_datetime!(at_time)], else: Keyword.new()) ++
+        if(at_time_b, do: [at_time_b: format_datetime!(at_time_b)], else: Keyword.new())
+
+  @spec build_experimental_get_host_events(integer(), boolean(), DateTime.t() | nil, DateTime.t() | nil) ::
+          keyword() | []
+  def build_experimental_get_host_events(per_page, reversed, start_time, end_time),
+    do:
+      [per_page: per_page, reversed: reversed] ++
+        if(start_time, do: [start_time: format_datetime!(start_time)], else: Keyword.new()) ++
+        if(end_time, do: [end_time: format_datetime!(end_time)], else: Keyword.new())
 
   @spec format_datetime!(DateTime.t()) :: String.t()
   defp format_datetime!(at_time), do: Timex.format!(at_time, @at_time_format, :strftime)

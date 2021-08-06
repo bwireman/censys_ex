@@ -84,4 +84,20 @@ defmodule CensysExUtilTest do
           at_time_b: "2021-08-26T12:53:27"
         ]
       )
+
+  test "test build_experimental_get_host_events",
+    do:
+      assert(
+        Util.build_experimental_get_host_events(
+          56,
+          true,
+          ~U[2021-08-27 12:53:27.450073Z],
+          ~U[2021-08-26 12:53:27.450073Z]
+        ) == [
+          per_page: 56,
+          reversed: true,
+          start_time: "2021-08-27T12:53:27",
+          end_time: "2021-08-26T12:53:27"
+        ]
+      )
 end
