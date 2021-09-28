@@ -7,12 +7,12 @@ defmodule CensysExUtilTest do
   test "get_client", do: assert(Util.get_client() == CensysEx.ApiMock)
 
   test "parse body: Success",
-    do: assert(Util.parse_body(~s({"code": 200})) == {:ok, %{"code" => 200}})
+    do: assert(Util.parse_body(~s({"code": 200}), 200) == {:ok, %{"code" => 200}})
 
   test "parse body: Known Error",
     do:
       assert(
-        Util.parse_body(~s({"code": 400, "error": "some error"})) ==
+        Util.parse_body(~s({"code": 400, "error": "some error"}), 400) ==
           {:error, "some error"}
       )
 
@@ -20,13 +20,21 @@ defmodule CensysExUtilTest do
     do:
       assert(
         Util.parse_body(
-          ~s({"code": 401, "status": "Unauthorized", "error": "You must authenticate with a valid API ID and secret."})
+          ~s({"code": 401, "status": "Unauthorized", "error": "You must authenticate with a valid API ID and secret."}),
+          401
         ) ==
           {:error, "You must authenticate with a valid API ID and secret."}
       )
 
   test "parse body: Unknown error",
-    do: assert(Util.parse_body(~s({"code": 400})) == {:error, "Unknown Error occurred"})
+    do: assert(Util.parse_body(~s({"code": 400}), 400) == {:error, "Unknown Error occurred with status code: 400"})
+
+  test "parse body: Invalid body",
+    do:
+      assert(
+        Util.parse_body("I'M NOT JSON", 400) ==
+          {:error, "Invalid API response. Failed to parse JSON response: unexpected byte at position 0: 0x49 ('I')"}
+      )
 
   test "test build_view_params: Empty", do: assert(Util.build_view_params(nil) == [])
 

@@ -11,6 +11,10 @@ defmodule CensysEx.API do
   @id_var "CENSYS_API_ID"
   @secret_var "CENSYS_API_SECRET"
   @creds "CENSYS_API_CREDS"
+  @timeout 10_000
+  @api_root "https://search.censys.io/api/"
+  @v1_api @api_root <> "v1/"
+  @v2_api @api_root <> "v2/"
 
   # api
 
@@ -79,14 +83,23 @@ defmodule CensysEx.API do
   @spec get(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
   @impl CensysEx.APIBehavior
   def get(resource, action, headers \\ [], options \\ []),
-    do: GenServer.call(__MODULE__, {:get, {resource, action, headers, options}}, 10_000)
+    do: GenServer.call(__MODULE__, {:get, {build_v2_path(resource, action), headers, options}}, @timeout)
+
+  @spec get_v1(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
+  @impl CensysEx.APIBehavior
+  def get_v1(resource, action, headers \\ [], options \\ []),
+    do: GenServer.call(__MODULE__, {:get, {build_v1_path(resource, action), headers, options}}, @timeout)
 
   # util
-  @spec build_path(String.t(), String.t()) :: String.t()
-  defp build_path(resource, action),
-    do: "https://search.censys.io/api/v2/" <> resource <> "/" <> action
+  @spec build_v1_path(String.t(), String.t()) :: String.t()
+  defp build_v1_path(resource, action),
+    do: @v1_api <> action <> "/" <> resource
 
-  @spec get_creds() :: tuple()
+  @spec build_v2_path(String.t(), String.t()) :: String.t()
+  defp build_v2_path(resource, action),
+    do: @v2_api <> resource <> "/" <> action
+
+  @spec get_creds() :: {String.t(), String.t()}
   defp get_creds do
     case :ets.lookup(__MODULE__, @creds) do
       [head | _] -> head |> elem(1)
@@ -105,8 +118,7 @@ defmodule CensysEx.API do
 
   @doc false
   @impl GenServer
-  def handle_call({:get, {resource, action, headers, options}}, _from, nil) do
-    path = build_path(resource, action)
+  def handle_call({:get, {path, headers, options}}, _from, nil) do
     basic_auth = get_creds()
 
     options =
@@ -121,8 +133,8 @@ defmodule CensysEx.API do
 
     resp =
       case HTTPoison.get(path, headers, options) do
-        {:ok, %HTTPoison.Response{body: body}} ->
-          Util.parse_body(body)
+        {:ok, %HTTPoison.Response{body: body, status_code: status_code}} ->
+          Util.parse_body(body, status_code)
 
         {:error, %HTTPoison.Error{reason: reason}} ->
           {:error, reason}

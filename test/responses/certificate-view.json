@@ -1,0 +1,358 @@
+{
+    "metadata": {
+        "updated_at": "2021-06-14T17:56:33",
+        "post_processed": false,
+        "seen_in_scan": true,
+        "source": "scan",
+        "parse_version": 0,
+        "parse_status": "success",
+        "added_at": "2021-01-12T11:53:44"
+    },
+    "parents": [],
+    "precert": false,
+    "parent_spki_subject_fingerprint": "5ca030abfa05e5f26bee0f21774984145f8ddac6e4b5c0da590f537b3fd22367",
+    "parsed": {
+        "version": 3,
+        "serial_number": "6684745550388409480013519646680411219",
+        "signature_algorithm": {
+            "name": "ECDSA-SHA384",
+            "oid": "1.2.840.10045.4.3.3"
+        },
+        "issuer": {
+            "common_name": [
+                "DigiCert TLS Hybrid ECC SHA384 2020 CA1"
+            ],
+            "country": [
+                "US"
+            ],
+            "organization": [
+                "DigiCert Inc"
+            ]
+        },
+        "issuer_dn": "C=US, O=DigiCert Inc, CN=DigiCert TLS Hybrid ECC SHA384 2020 CA1",
+        "validity": {
+            "start": "2021-01-11T00:00:00Z",
+            "end": "2022-01-18T23:59:59Z",
+            "length": 32227199
+        },
+        "subject": {
+            "common_name": [
+                "cloudflare-dns.com"
+            ],
+            "country": [
+                "US"
+            ],
+            "locality": [
+                "San Francisco"
+            ],
+            "province": [
+                "California"
+            ],
+            "organization": [
+                "Cloudflare, Inc."
+            ]
+        },
+        "subject_dn": "C=US, ST=California, L=San Francisco, O=Cloudflare, Inc., CN=cloudflare-dns.com",
+        "subject_key_info": {
+            "key_algorithm": {
+                "name": "ECDSA"
+            },
+            "ecdsa_public_key": {
+                "b": "WsY12Ko6k+ez671VdpiGvGUdBrDMU7D2O848PifSYEs=",
+                "curve": "P-256",
+                "gx": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY=",
+                "gy": "T+NC4v4af5uO5+tKfA+eFivOM1drMV7Oy7ZAaDe/UfU=",
+                "length": 256,
+                "n": "/////wAAAAD//////////7zm+q2nF56E87nKwvxjJVE=",
+                "p": "/////wAAAAEAAAAAAAAAAAAAAAD///////////////8=",
+                "pub": "BBetH+g1r3DTjZyeZP1HHluXDArREKgmMhE2Zk0SmcPhMbv1IWNz3aXBwaDwbaTEXuHC29r5DTSAGve54Dry1XQ=",
+                "x": "F60f6DWvcNONnJ5k/UceW5cMCtEQqCYyETZmTRKZw+E=",
+                "y": "Mbv1IWNz3aXBwaDwbaTEXuHC29r5DTSAGve54Dry1XQ="
+            },
+            "fingerprint_sha256": "a1df686ec7285d0343e7afc38a4ca966b2645c6bdb415e58eb54067dc362b47a"
+        },
+        "extensions": {
+            "key_usage": {
+                "digital_signature": true,
+                "value": 1
+            },
+            "basic_constraints": {
+                "is_ca": false
+            },
+            "subject_alt_name": {
+                "dns_names": [
+                    "cloudflare-dns.com",
+                    "*.cloudflare-dns.com",
+                    "one.one.one.one"
+                ],
+                "ip_addresses": [
+                    "1.1.1.1",
+                    "1.0.0.1",
+                    "162.159.36.1",
+                    "162.159.46.1",
+                    "2606:4700:4700::1111",
+                    "2606:4700:4700::1001",
+                    "2606:4700:4700::64",
+                    "2606:4700:4700::6400"
+                ]
+            },
+            "crl_distribution_points": [
+                "http://crl3.digicert.com/DigiCertTLSHybridECCSHA3842020CA1.crl",
+                "http://crl4.digicert.com/DigiCertTLSHybridECCSHA3842020CA1.crl"
+            ],
+            "authority_key_id": "0abc0829178ca5396d7a0ece33c72eb3edfbc37a",
+            "subject_key_id": "e1b6fc06f9b98b05f4c1e2489b02b90bc1b53d79",
+            "extended_key_usage": {
+                "server_auth": true,
+                "client_auth": true
+            },
+            "certificate_policies": [
+                {
+                    "id": "2.16.840.1.114412.1.1",
+                    "cps": [
+                        "http://www.digicert.com/CPS"
+                    ]
+                },
+                {
+                    "id": "2.23.140.1.2.2"
+                }
+            ],
+            "authority_info_access": {
+                "ocsp_urls": [
+                    "http://ocsp.digicert.com"
+                ],
+                "issuer_urls": [
+                    "http://cacerts.digicert.com/DigiCertTLSHybridECCSHA3842020CA1.crt"
+                ]
+            },
+            "signed_certificate_timestamps": [
+                {
+                    "version": 0,
+                    "log_id": "KXm+8J45OSHwVnOfY6V35b5XfZxgCvj5TV0mXCVdx4Q=",
+                    "timestamp": 1610393064,
+                    "signature": "BAMARzBFAiEA0bL2jPhTlZ3k1FMGNIICigrqiqe8Jx77Vh7RFGQfrmcCICWxht0bKuePAcRA9sMWeKthv/Y6NPxHiBMHZfRguzRC"
+                },
+                {
+                    "version": 0,
+                    "log_id": "IkVFB1lVJFaWP6Ev8fdthuAjJmOtwEt/XcaDXG7iDwI=",
+                    "timestamp": 1610393064,
+                    "signature": "BAMARzBFAiEAld0aZ0os7Kydb4v+PP6k9T6HJWWCNzedZr3kXQ9oJFkCIHVl/jC7gGvM4rihiJao6AImjr7P+CH6rYWgDYeh1vE0"
+                }
+            ]
+        },
+        "signature": {
+            "signature_algorithm": {
+                "name": "ECDSA-SHA384",
+                "oid": "1.2.840.10045.4.3.3"
+            },
+            "value": "MGQCMCTCz2y99q7RydUfSnQuPD3RwD7c1xvTlHFb/qWGFiaCASLTCm78mLXS4rnlB2l3lgIwRXtvgqZ9tmLDMYXVtTVdT0yEiKwaAD0MhEDcsKfKHBMnFR43+UbDrtn9+bkji38q",
+            "valid": false,
+            "self_signed": false
+        },
+        "fingerprint_md5": "fef6c18c02d01a14ab751275dd6abc29",
+        "fingerprint_sha1": "f1b38143b992645497cf452f8c1ac84249794282",
+        "fingerprint_sha256": "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+        "tbs_noct_fingerprint": "666739d1587158c1cb4357f3fcd3d85d27b5c39191a7fad8eef5faf956e97ec3",
+        "spki_subject_fingerprint": "84d6826a5461edc3d663412dbcabf9c75d5432e0bc3c91a3f66810200b898e9b",
+        "tbs_fingerprint": "7abe8910006b22ee9f9a308355bc4089e43ab269a3eea2307edbff79ae21bba7",
+        "validation_level": "OV",
+        "names": [
+            "*.cloudflare-dns.com",
+            "1.0.0.1",
+            "1.1.1.1",
+            "162.159.36.1",
+            "162.159.46.1",
+            "cloudflare-dns.com",
+            "one.one.one.one"
+        ],
+        "redacted": false,
+        "__expanded_names": [
+            "1.1",
+            "one.one.one",
+            "0.1",
+            "*.cloudflare-dns.com",
+            "36.1",
+            "162.159.46.1",
+            "one.one.one.one",
+            "0.0.1",
+            "46.1",
+            "162.159.36.1",
+            "1.1.1.1",
+            "cloudflare-dns.com",
+            "1",
+            "1.0.0.1",
+            "one.one",
+            "one",
+            "159.46.1",
+            "1.1.1",
+            "com",
+            "159.36.1"
+        ]
+    },
+    "ct": {
+        "google_submariner": {
+            "index": 20935990,
+            "added_to_ct_at": "2021-01-17T09:23:45+00:00",
+            "ct_to_censys_at": "2021-01-17T09:25:36+00:00"
+        }
+    },
+    "validation": {
+        "nss": {
+            "valid": true,
+            "was_valid": true,
+            "trusted_path": true,
+            "had_trusted_path": true,
+            "blacklisted": false,
+            "whitelisted": false,
+            "type": "leaf",
+            "paths": [
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "6dacbb8945137b1dad4211b0436efbe06f12ace36904973b45ae25740823d369",
+                    "16af57a9f676b0ab126095aa5ebadef22ab31119d644ac95cd4b93dbf3f26aeb"
+                ],
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+                ]
+            ],
+            "in_revocation_set": false,
+            "parents": [
+                "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21"
+            ],
+            "ocsp_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "crl_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "revoked": false
+        },
+        "apple": {
+            "valid": true,
+            "was_valid": true,
+            "trusted_path": true,
+            "had_trusted_path": true,
+            "blacklisted": false,
+            "whitelisted": false,
+            "type": "leaf",
+            "paths": [
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+                ],
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "6dacbb8945137b1dad4211b0436efbe06f12ace36904973b45ae25740823d369",
+                    "16af57a9f676b0ab126095aa5ebadef22ab31119d644ac95cd4b93dbf3f26aeb"
+                ]
+            ],
+            "in_revocation_set": false,
+            "parents": [
+                "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21"
+            ],
+            "ocsp_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "crl_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "revoked": false
+        },
+        "microsoft": {
+            "valid": true,
+            "was_valid": true,
+            "trusted_path": true,
+            "had_trusted_path": true,
+            "blacklisted": false,
+            "whitelisted": false,
+            "type": "leaf",
+            "paths": [
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "6dacbb8945137b1dad4211b0436efbe06f12ace36904973b45ae25740823d369",
+                    "16af57a9f676b0ab126095aa5ebadef22ab31119d644ac95cd4b93dbf3f26aeb"
+                ],
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+                ]
+            ],
+            "in_revocation_set": false,
+            "parents": [
+                "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21"
+            ],
+            "ocsp_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "crl_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "revoked": false
+        },
+        "google_ct_primary": {
+            "valid": true,
+            "was_valid": true,
+            "trusted_path": true,
+            "had_trusted_path": true,
+            "blacklisted": false,
+            "whitelisted": false,
+            "type": "leaf",
+            "paths": [
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "6dacbb8945137b1dad4211b0436efbe06f12ace36904973b45ae25740823d369",
+                    "16af57a9f676b0ab126095aa5ebadef22ab31119d644ac95cd4b93dbf3f26aeb"
+                ],
+                [
+                    "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+                    "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21",
+                    "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+                ]
+            ],
+            "in_revocation_set": false,
+            "parents": [
+                "d79a2d5e03295c0e9feae36d021ebd5209700ab1a9e817a43f30fa3c66f78d21"
+            ],
+            "ocsp_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "crl_revocation": {
+                "revoked": false,
+                "reason": "reserved"
+            },
+            "revoked": false
+        },
+        "revoked": false
+    },
+    "zlint": {
+        "version": 3,
+        "notices_present": false,
+        "errors_present": false,
+        "warnings_present": false,
+        "fatals_present": false
+    },
+    "tags": [
+        "unexpired",
+        "leaf",
+        "ov",
+        "ct",
+        "trusted",
+        "google-ct"
+    ],
+    "raw": "MIIFhjCCBQ2gAwIBAgIQBQdvZtEbaSJWzKzVRv/sUzAKBggqhkjOPQQDAzBWMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMTAwLgYDVQQDEydEaWdpQ2VydCBUTFMgSHlicmlkIEVDQyBTSEEzODQgMjAyMCBDQTEwHhcNMjEwMTExMDAwMDAwWhcNMjIwMTE4MjM1OTU5WjByMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZyYW5jaXNjbzEZMBcGA1UEChMQQ2xvdWRmbGFyZSwgSW5jLjEbMBkGA1UEAxMSY2xvdWRmbGFyZS1kbnMuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF60f6DWvcNONnJ5k/UceW5cMCtEQqCYyETZmTRKZw+Exu/UhY3PdpcHBoPBtpMRe4cLb2vkNNIAa97ngOvLVdKOCA58wggObMB8GA1UdIwQYMBaAFAq8CCkXjKU5bXoOzjPHLrPt+8N6MB0GA1UdDgQWBBThtvwG+bmLBfTB4kibArkLwbU9eTCBpgYDVR0RBIGeMIGbghJjbG91ZGZsYXJlLWRucy5jb22CFCouY2xvdWRmbGFyZS1kbnMuY29tgg9vbmUub25lLm9uZS5vbmWHBAEBAQGHBAEAAAGHBKKfJAGHBKKfLgGHECYGRwBHAAAAAAAAAAAAERGHECYGRwBHAAAAAAAAAAAAEAGHECYGRwBHAAAAAAAAAAAAAGSHECYGRwBHAAAAAAAAAAAAZAAwDgYDVR0PAQH/BAQDAgeAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjCBlwYDVR0fBIGPMIGMMESgQqBAhj5odHRwOi8vY3JsMy5kaWdpY2VydC5jb20vRGlnaUNlcnRUTFNIeWJyaWRFQ0NTSEEzODQyMDIwQ0ExLmNybDBEoEKgQIY+aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0VExTSHlicmlkRUNDU0hBMzg0MjAyMENBMS5jcmwwSwYDVR0gBEQwQjA2BglghkgBhv1sAQEwKTAnBggrBgEFBQcCARYbaHR0cDovL3d3dy5kaWdpY2VydC5jb20vQ1BTMAgGBmeBDAECAjCBgwYIKwYBBQUHAQEEdzB1MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wTQYIKwYBBQUHMAKGQWh0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydFRMU0h5YnJpZEVDQ1NIQTM4NDIwMjBDQTEuY3J0MAwGA1UdEwEB/wQCMAAwggEEBgorBgEEAdZ5AgQCBIH1BIHyAPAAdgApeb7wnjk5IfBWc59jpXflvld9nGAK+PlNXSZcJV3HhAAAAXby6BKoAAAEAwBHMEUCIQDRsvaM+FOVneTUUwY0ggKKCuqKp7wnHvtWHtEUZB+uZwIgJbGG3Rsq548BxED2wxZ4q2G/9jo0/EeIEwdl9GC7NEIAdgAiRUUHWVUkVpY/oS/x922G4CMmY63AS39dxoNcbuIPAgAAAXby6BMPAAAEAwBHMEUCIQCV3RpnSizsrJ1vi/48/qT1PoclZYI3N51mveRdD2gkWQIgdWX+MLuAa8ziuKGIlqjoAiaOvs/4IfqthaANh6HW8TQwCgYIKoZIzj0EAwMDZwAwZAIwJMLPbL32rtHJ1R9KdC48PdHAPtzXG9OUcVv+pYYWJoIBItMKbvyYtdLiueUHaXeWAjBFe2+Cpn22YsMxhdW1NV1PTISIrBoAPQyEQNywp8ocEycVHjf5RsOu2f35uSOLfyo="
+}

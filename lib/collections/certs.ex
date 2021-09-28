@@ -2,10 +2,22 @@ defmodule CensysEx.Certs do
   @moduledoc """
   CensysEx wrapper for the search.censys.io v2 API for the "certs" resource
   """
-
   alias CensysEx.{Paginate, Util}
 
   @index "certificates"
+
+  @doc """
+  Hits the Censys View Certs V1 API.
+
+    - API docs: https://search.censys.io/api#/certificates/viewCertificate
+
+  ## Examples
+  ```
+  CensysEx.Certs.view("fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")
+  ```
+  """
+  @spec view(String.t()) :: CensysEx.result()
+  def view(fp), do: Util.get_client().get_v1(@index <> "/" <> fp, "view", [], [])
 
   @doc """
   Hits the Censys Certs hosts API. Returns a stream of results
