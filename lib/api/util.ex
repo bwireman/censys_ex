@@ -4,21 +4,23 @@ defmodule CensysEx.Util do
   # RFC3339 format
   @at_time_format "%Y-%m-%dT%H:%M:%S"
 
+  @invalid_message "Invalid API response"
+  @invalid_api_resp {:error, @invalid_message}
+
   @spec get_client() :: CensysEx.APIBehavior.t()
   def get_client, do: Application.get_env(:censys_ex, :client, CensysEx.API)
 
-  @spec parse_body(String.t()) :: {:error, any} | {:ok, map}
-  def parse_body(body) do
+  @spec parse_body(String.t(), integer()) :: CensysEx.result()
+  def parse_body(body, status_code) do
     case Jason.decode(body) do
-      {:ok, decoded} ->
-        case Map.get(decoded, "code") do
-          code when code >= 400 -> {:error, Map.get(decoded, "error", "Unknown Error occurred")}
-          code when code >= 200 and code < 300 -> {:ok, decoded}
-          nil -> {:error, "Invalid API response"}
-        end
+      {:ok, decoded} when is_map(decoded) ->
+        parse_status_code(decoded, status_code)
 
-      err ->
-        err
+      {:error, %Jason.DecodeError{} = decode_error} ->
+        {:error, "#{@invalid_message}. Failed to parse JSON response: " <> Jason.DecodeError.message(decode_error)}
+
+      _ ->
+        @invalid_api_resp
     end
   end
 
@@ -54,4 +56,21 @@ defmodule CensysEx.Util do
 
   @spec format_datetime!(DateTime.t()) :: String.t()
   defp format_datetime!(at_time), do: Timex.format!(at_time, @at_time_format, :strftime)
+
+  @spec parse_status_code(map(), integer()) :: CensysEx.result()
+  defp parse_status_code(decoded, status_code) do
+    status_code = Map.get(decoded, "code", status_code)
+
+    case status_code do
+      code when is_integer(code) and code >= 400 ->
+        {:error,
+         Map.get(decoded, "error", "Unknown Error occurred with status code: " <> Integer.to_string(status_code))}
+
+      code when is_integer(code) and code >= 200 and code < 300 ->
+        {:ok, decoded}
+
+      _ ->
+        @invalid_api_resp
+    end
+  end
 end
