@@ -128,6 +128,13 @@ CensysEx.Hosts.diff("8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[202
 
 ## Certs
 
+### View a cert by fingerprint
+
+```elixir
+# NOTE this actually a V1 API
+CensysEx.Certs.view("fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")
+```
+
 ### Get hosts that present a cert
 
 
@@ -139,9 +146,24 @@ CensysEx.Certs.get_hosts_by_cert("fb444eb8e68437bae06232b9f5091bccff62a768ca09e9
 ["10.0.0.6", "10.2.0.1", ...]
 ```
 
-### Certs V2 API Docs
+### Certs API Docs
 
-- [Hosts](https://search.censys.io/api#/certs/getHostsByCert)
+- [Vvew](https://search.censys.io/api#/certificates/viewCertificate)
+- [hosts](https://search.censys.io/api#/certs/getHostsByCert)
+
+### Experimental
+
+```elixir
+CensysEx.Experimental.host_events("127.0.0.1")
+|> Stream.take(25)
+|> Stream.map(&Map.get(&1, "_event"))
+|> Enum.to_list()
+["service_observed", "location_updated", ...]
+```
+
+### Experimental V2 API Docs
+
+- [events](https://search.censys.io/api#/experimental/viewHostEvents)
 
 ## Metadata
 
