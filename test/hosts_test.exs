@@ -122,7 +122,10 @@ defmodule CensysExHostTest do
   # --- search ---
   test "can stream search results" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn "hosts", "search", [], params: [q: "services.service_name: HTTP", per_page: 100] ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: HTTP", per_page: 100, virtual_hosts: "EXCLUDE"] ->
       CensysEx.TestHelpers.load_response("search")
     end)
     |> expect(:get, 2, fn "hosts",
@@ -131,7 +134,8 @@ defmodule CensysExHostTest do
                           params: [
                             cursor: "eyJBZnRlciI6WyIxOC4zNDg4ODMiLCIxNDcuNzguNjAuNDUiXSwiUmV2ZXJzZSI6ZmFsc2V9",
                             q: "services.service_name: HTTP",
-                            per_page: 100
+                            per_page: 100,
+                            virtual_hosts: "EXCLUDE"
                           ] ->
       CensysEx.TestHelpers.load_response("search")
     end)
@@ -146,7 +150,10 @@ defmodule CensysExHostTest do
 
   test "can end early if no next in stream of search results" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn "hosts", "search", [], params: [q: "services.service_name: SIP", per_page: 100] ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100, virtual_hosts: "EXCLUDE"] ->
       CensysEx.TestHelpers.load_response("search-cutoff")
     end)
 
@@ -160,7 +167,10 @@ defmodule CensysExHostTest do
 
   test "can end early if take less than total in stream of search results" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn "hosts", "search", [], params: [q: "services.service_name: SIP", per_page: 100] ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100, virtual_hosts: "EXCLUDE"] ->
       CensysEx.TestHelpers.load_response("search")
     end)
 
@@ -174,7 +184,10 @@ defmodule CensysExHostTest do
 
   test "search raises when unauthorized" do
     CensysEx.ApiMock
-    |> expect(:get, 1, fn "hosts", "search", [], params: [q: "services.service_name: SIP", per_page: 100] ->
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100, virtual_hosts: "EXCLUDE"] ->
       CensysEx.TestHelpers.load_response("unauthorized")
     end)
 
@@ -183,5 +196,22 @@ defmodule CensysExHostTest do
       |> Stream.take(150)
       |> Enum.to_list()
     end
+  end
+
+  test "can specify vhosts" do
+    CensysEx.ApiMock
+    |> expect(:get, 1, fn "hosts",
+                          "search",
+                          [],
+                          params: [q: "services.service_name: SIP", per_page: 100, virtual_hosts: "INCLUDE"] ->
+      CensysEx.TestHelpers.load_response("search")
+    end)
+
+    hits =
+      CensysEx.Hosts.search("services.service_name: SIP", 100, :include)
+      |> Stream.take(20)
+      |> Enum.to_list()
+
+    assert length(hits) == 20
   end
 end

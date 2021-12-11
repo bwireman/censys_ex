@@ -148,7 +148,7 @@ CensysEx.Certs.get_hosts_by_cert("fb444eb8e68437bae06232b9f5091bccff62a768ca09e9
 
 ### Certs API Docs
 
-- [Vvew](https://search.censys.io/api#/certificates/viewCertificate)
+- [View](https://search.censys.io/api#/certificates/viewCertificate)
 - [hosts](https://search.censys.io/api#/certs/getHostsByCert)
 
 ### Experimental

@@ -4,6 +4,13 @@ defmodule CensysEx.Hosts do
   """
   alias CensysEx.{Paginate, Search, Util}
 
+  @typedoc """
+  Values that determine how to query Virtual Hosts. `:exclude` will ignore any virtual hosts
+  entries, `:include` virtual hosts will be present in the returned list of hits, `:only` will
+  return only virtual hosts
+  """
+  @type v_hosts :: :exclude | :include | :only
+
   @index "hosts"
 
   @doc """
@@ -22,9 +29,17 @@ defmodule CensysEx.Hosts do
   ["10.0.0.6", "10.2.0.1", ...]
   ```
   """
-  @spec search(String.t(), integer()) :: CensysEx.result_stream(map())
-  def search(query \\ "", per_page \\ 100),
-    do: Search.search(@index, query, per_page)
+  @spec search(String.t(), integer(), v_hosts()) :: CensysEx.result_stream(map())
+  def search(query \\ "", per_page \\ 100, virtual_hosts \\ :exclude) do
+    vhost =
+      case virtual_hosts do
+        :include -> "INCLUDE"
+        :only -> "ONLY"
+        _ -> "EXCLUDE"
+      end
+
+    Search.search(@index, query, per_page, virtual_hosts: vhost)
+  end
 
   @doc """
   Hits the Censys Hosts view API. Returning full
