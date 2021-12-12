@@ -45,7 +45,7 @@ defmodule CensysExHostTest do
   # --- aggregate ---
   test "can aggregate hosts" do
     CensysEx.ApiMock
-    |> expect(:aggregate, fn "hosts", "service.port", nil, 50 ->
+    |> expect(:aggregate, fn "hosts", "service.port", nil, 50, [virtual_hosts: "EXCLUDE"] ->
       CensysEx.TestHelpers.load_response("aggregate")
     end)
 
@@ -198,7 +198,7 @@ defmodule CensysExHostTest do
     end
   end
 
-  test "can specify vhosts" do
+  test "can specify vhosts in search" do
     CensysEx.ApiMock
     |> expect(:get, 1, fn "hosts",
                           "search",

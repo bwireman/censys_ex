@@ -74,11 +74,11 @@ defmodule CensysEx.API do
   def view(resource, id, at_time \\ nil),
     do: get(resource, id, [], params: Util.build_view_params(at_time))
 
-  @spec aggregate(String.t(), String.t(), String.t() | nil, integer()) ::
+  @spec aggregate(String.t(), String.t(), String.t() | nil, integer(), Keyword.t()) ::
           CensysEx.result()
   @impl CensysEx.APIBehavior
-  def aggregate(resource, field, query \\ nil, num_buckets \\ 50),
-    do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets))
+  def aggregate(resource, field, query \\ nil, num_buckets \\ 50, other_params \\ Keyword.new()),
+    do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets) ++ other_params)
 
   @spec get(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
   @impl CensysEx.APIBehavior

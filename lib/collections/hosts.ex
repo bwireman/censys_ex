@@ -30,16 +30,8 @@ defmodule CensysEx.Hosts do
   ```
   """
   @spec search(String.t(), integer(), v_hosts()) :: CensysEx.result_stream(map())
-  def search(query \\ "", per_page \\ 100, virtual_hosts \\ :exclude) do
-    vhost =
-      case virtual_hosts do
-        :include -> "INCLUDE"
-        :only -> "ONLY"
-        _ -> "EXCLUDE"
-      end
-
-    Search.search(@index, query, per_page, virtual_hosts: vhost)
-  end
+  def search(query \\ "", per_page \\ 100, virtual_hosts \\ :exclude),
+    do: Search.search(@index, query, per_page, virtual_hosts: vhost_to_string(virtual_hosts))
 
   @doc """
   Hits the Censys Hosts view API. Returning full
@@ -118,7 +110,16 @@ defmodule CensysEx.Hosts do
   CensysEx.Hosts.aggregate("location.country_code", "services.service_name: MEMCACHED", 1000)
   ```
   """
-  @spec aggregate(String.t(), String.t() | nil, integer()) :: CensysEx.result()
-  def aggregate(field, query \\ nil, num_buckets \\ 50),
-    do: Util.get_client().aggregate(@index, field, query, num_buckets)
+  @spec aggregate(String.t(), String.t() | nil, integer(), v_hosts()) :: CensysEx.result()
+  def aggregate(field, query \\ nil, num_buckets \\ 50, virtual_hosts \\ :exclude),
+    do: Util.get_client().aggregate(@index, field, query, num_buckets, virtual_hosts: vhost_to_string(virtual_hosts))
+
+  @spec vhost_to_string(v_hosts) :: String.t()
+  defp vhost_to_string(v_host) do
+    case v_host do
+      :include -> "INCLUDE"
+      :only -> "ONLY"
+      _ -> "EXCLUDE"
+    end
+  end
 end
