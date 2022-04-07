@@ -33,7 +33,7 @@ defmodule CensysExUtilTest do
     do:
       assert(
         Util.parse_body("I'M NOT JSON", 400) ==
-          {:error, "Invalid API response. Failed to parse JSON response: unexpected byte at position 0: 0x49 ('I')"}
+          {:error, "Invalid API response. Failed to parse JSON response: unexpected byte at position 0: 0x49 (\"I\")"}
       )
 
   test "test build_view_params: Empty", do: assert(Util.build_view_params(nil) == [])
