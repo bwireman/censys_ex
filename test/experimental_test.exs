@@ -1,13 +1,13 @@
 defmodule CensysExExperimentalTest do
   use ExUnit.Case, async: true
-  import Mox
+  import Mimic
 
   setup :verify_on_exit!
 
   @cursor "AS-RtkdTRUHZmiJoIbUXCmByfp5GDTnJrysJOelGDxWupIvXPZMzaCItyOiH7Xb9gGd08iAmuZS3ygcwxz0GuifzAD4AyUGjJ-bAb4XAar4YsRqJnjY2ByzdPB1rSaCvRx8O7nyWzbX-wyv3VyAg_PUDbg=="
 
   test "can get events for a host" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "experimental", "hosts/1.1.1.1/events", [], params: [per_page: 25, reversed: false] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-events")
     end)
@@ -27,7 +27,7 @@ defmodule CensysExExperimentalTest do
   end
 
   test "can get events for a host: cutoff" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "experimental",
                           "hosts/1.1.1.1/events",
                           [],

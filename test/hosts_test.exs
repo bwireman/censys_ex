@@ -1,14 +1,14 @@
 defmodule CensysExHostTest do
   use ExUnit.Case, async: true
   doctest CensysEx.Hosts
-  import Mox
+  import Mimic
 
   # Make sure mocks are verified when the test exits
   setup :verify_on_exit!
 
   # --- view ---
   test "can view hosts" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:view, fn "hosts", "1.1.1.1", nil ->
       CensysEx.TestHelpers.load_response("1.1.1.1")
     end)
@@ -29,7 +29,7 @@ defmodule CensysExHostTest do
   end
 
   test "can view hosts at a time in the past" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:view, fn "hosts", "1.1.1.1", ~U[2021-06-07 12:53:27.450073Z] ->
       CensysEx.TestHelpers.load_response("1.1.1.1")
     end)
@@ -44,7 +44,7 @@ defmodule CensysExHostTest do
 
   # --- aggregate ---
   test "can aggregate hosts" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:aggregate, fn "hosts", "service.port", nil, 50, [virtual_hosts: "EXCLUDE"] ->
       CensysEx.TestHelpers.load_response("aggregate")
     end)
@@ -57,7 +57,7 @@ defmodule CensysExHostTest do
 
   # --- diff ---
   test "can diff hosts" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, fn "hosts", "8.8.8.8/diff", [], [params: [ip_b: "1.1.1.1"]] ->
       CensysEx.TestHelpers.load_response("diff-8.8.8.8-1.1.1.1")
     end)
@@ -78,7 +78,7 @@ defmodule CensysExHostTest do
   end
 
   test "can diff hosts at times" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, fn "hosts", "8.8.8.8/diff", [], [params: [at_time: "2021-08-27T12:53:27"]] ->
       # doesn't matter testing params
       CensysEx.TestHelpers.load_response("diff-8.8.8.8-1.1.1.1")
@@ -89,7 +89,7 @@ defmodule CensysExHostTest do
 
   # --- names ---
   test "can stream names on a host" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts", "1.1.1.1/names", [], params: [] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-names")
     end)
@@ -103,7 +103,7 @@ defmodule CensysExHostTest do
   end
 
   test "can stream names on a host getting multiple pages" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts", "1.1.1.1/names", [], params: [] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-names")
     end)
@@ -121,7 +121,7 @@ defmodule CensysExHostTest do
 
   # --- search ---
   test "can stream search results" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts",
                           "search",
                           [],
@@ -149,7 +149,7 @@ defmodule CensysExHostTest do
   end
 
   test "can end early if no next in stream of search results" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts",
                           "search",
                           [],
@@ -166,7 +166,7 @@ defmodule CensysExHostTest do
   end
 
   test "can end early if take less than total in stream of search results" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts",
                           "search",
                           [],
@@ -183,7 +183,7 @@ defmodule CensysExHostTest do
   end
 
   test "search raises when unauthorized" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts",
                           "search",
                           [],
@@ -199,7 +199,7 @@ defmodule CensysExHostTest do
   end
 
   test "can specify vhosts in search" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "hosts",
                           "search",
                           [],

@@ -1,12 +1,12 @@
 defmodule CensysExMetadataTest do
   use ExUnit.Case, async: true
-  import Mox
+  import Mimic
 
   setup :verify_on_exit!
 
   # hosts
   test "can get hosts metadata" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, fn "metadata", "hosts", [], [] ->
       CensysEx.TestHelpers.load_response("hosts-metadata")
     end)

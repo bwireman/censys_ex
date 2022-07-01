@@ -7,9 +7,6 @@ defmodule CensysEx.Util do
   @invalid_message "Invalid API response"
   @invalid_api_resp {:error, @invalid_message}
 
-  @spec get_client() :: CensysEx.APIBehavior.t()
-  def get_client, do: Application.get_env(:censys_ex, :client, CensysEx.API)
-
   @spec parse_body(String.t(), integer()) :: CensysEx.result()
   def parse_body(body, status_code) do
     case Jason.decode(body) do

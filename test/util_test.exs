@@ -3,9 +3,6 @@ defmodule CensysExUtilTest do
 
   alias CensysEx.Util
 
-  # this is kind of a dumb test but...
-  test "get_client", do: assert(Util.get_client() == CensysEx.ApiMock)
-
   test "parse body: Success",
     do: assert(Util.parse_body(~s({"code": 200}), 200) == {:ok, %{"code" => 200}})
 

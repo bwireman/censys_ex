@@ -50,7 +50,7 @@ defmodule CensysEx.Hosts do
   """
   @spec view(String.t(), DateTime.t() | nil) :: CensysEx.result()
   def view(ip, at_time \\ nil),
-    do: Util.get_client().view(@index, ip, at_time)
+    do: CensysEx.API.view(@index, ip, at_time)
 
   @doc """
   Hits the Censys Hosts view names API. Returning a stream of names for that IP.
@@ -65,7 +65,7 @@ defmodule CensysEx.Hosts do
   """
   @spec names(String.t()) :: CensysEx.result_stream(String.t())
   def names(ip) do
-    next = fn params -> Util.get_client().get(@index, ip <> "/names", [], params) end
+    next = fn params -> CensysEx.API.get(@index, ip <> "/names", [], params) end
     extractor = fn client = %Paginate{} -> get_in(client.results, ["result", "names"]) end
 
     Paginate.stream(next, extractor)
@@ -95,7 +95,7 @@ defmodule CensysEx.Hosts do
   @spec diff(String.t(), String.t() | nil, DateTime.t() | nil, DateTime.t() | nil) ::
           CensysEx.result()
   def diff(ip, ip_b \\ nil, at_time \\ nil, at_time_b \\ nil),
-    do: Util.get_client().get(@index, ip <> "/diff", [], params: Util.build_diff_params(ip_b, at_time, at_time_b))
+    do: CensysEx.API.get(@index, ip <> "/diff", [], params: Util.build_diff_params(ip_b, at_time, at_time_b))
 
   @doc """
   Hits the Censys Hosts aggregate API. Optionally control number of buckets returned
@@ -112,7 +112,7 @@ defmodule CensysEx.Hosts do
   """
   @spec aggregate(String.t(), String.t() | nil, integer(), v_hosts()) :: CensysEx.result()
   def aggregate(field, query \\ nil, num_buckets \\ 50, virtual_hosts \\ :exclude),
-    do: Util.get_client().aggregate(@index, field, query, num_buckets, virtual_hosts: vhost_to_string(virtual_hosts))
+    do: CensysEx.API.aggregate(@index, field, query, num_buckets, virtual_hosts: vhost_to_string(virtual_hosts))
 
   @spec vhost_to_string(v_hosts) :: String.t()
   defp vhost_to_string(v_host) do

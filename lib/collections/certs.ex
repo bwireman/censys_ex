@@ -2,7 +2,7 @@ defmodule CensysEx.Certs do
   @moduledoc """
   CensysEx wrapper for the search.censys.io v2 API for the "certs" resource
   """
-  alias CensysEx.{Paginate, Util}
+  alias CensysEx.Paginate
 
   @index "certificates"
 
@@ -17,7 +17,7 @@ defmodule CensysEx.Certs do
   ```
   """
   @spec view(String.t()) :: CensysEx.result()
-  def view(fp), do: Util.get_client().get_v1(@index <> "/" <> fp, "view", [], [])
+  def view(fp), do: CensysEx.API.get_v1(@index <> "/" <> fp, "view", [], [])
 
   @doc """
   Hits the Censys Certs hosts API. Returns a stream of results
@@ -36,7 +36,7 @@ defmodule CensysEx.Certs do
   """
   @spec get_hosts_by_cert(String.t()) :: CensysEx.result_stream(map())
   def get_hosts_by_cert(fp) do
-    next = fn params -> Util.get_client().get(@index, fp <> "/hosts", [], params) end
+    next = fn params -> CensysEx.API.get(@index, fp <> "/hosts", [], params) end
     extractor = fn client = %Paginate{} -> get_in(client.results, ["result", "hosts"]) end
 
     Paginate.stream(next, extractor)

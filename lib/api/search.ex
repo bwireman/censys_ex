@@ -3,7 +3,7 @@ defmodule CensysEx.Search do
   Search API V2 Specific wrapper around CensysEx.Paginate
   """
 
-  alias CensysEx.{Paginate, Util}
+  alias CensysEx.Paginate
 
   @spec search(String.t(), String.t(), integer(), Keyword.t()) :: CensysEx.result_stream(map())
   def search(index, query \\ "", per_page \\ 100, other_params \\ Keyword.new()),
@@ -13,5 +13,5 @@ defmodule CensysEx.Search do
     do: get_in(client.results, ["result", "hits"])
 
   defp gen_search_fn(index),
-    do: fn params -> Util.get_client().get(index, "search", [], params) end
+    do: fn params -> CensysEx.API.get(index, "search", [], params) end
 end

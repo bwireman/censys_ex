@@ -1,6 +1,6 @@
 defmodule CensysExCertsTest do
   use ExUnit.Case, async: true
-  import Mox
+  import Mimic
 
   setup :verify_on_exit!
 
@@ -10,7 +10,7 @@ defmodule CensysExCertsTest do
 
   # view certs
   test "view cert" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get_v1, fn "certificates/" <> @fp, "view", [], [] ->
       CensysEx.TestHelpers.load_response("certificate-view", 200)
     end)
@@ -25,7 +25,7 @@ defmodule CensysExCertsTest do
 
   # hosts showing certs
   test "can get hosts for a cert" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "certificates", @get_hosts_path, [], params: [] ->
       CensysEx.TestHelpers.load_response("certificate-hosts")
     end)
@@ -42,7 +42,7 @@ defmodule CensysExCertsTest do
   end
 
   test "can get hosts for a cert: cutoff" do
-    CensysEx.ApiMock
+    CensysEx.API
     |> expect(:get, 1, fn "certificates", @get_hosts_path, [], params: [] ->
       CensysEx.TestHelpers.load_response("certificate-hosts")
     end)

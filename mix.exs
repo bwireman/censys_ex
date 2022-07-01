@@ -35,7 +35,7 @@ defmodule CensysEx.MixProject do
       {:jason, "~> 1.2"},
       {:timex, "~> 3.7"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
-      {:mox, "~> 1.0", only: :test},
+      {:mimic, "~> 1.7", only: :test},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.28.3", only: :dev, runtime: false}
     ]
@@ -56,9 +56,7 @@ defmodule CensysEx.MixProject do
 
   defp dialyzer() do
     [
-      flags: ["-Wunmatched_returns", :error_handling, :underspecs],
-      plt_core_path: "priv/plts",
-      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      flags: ["-Wunmatched_returns", :error_handling, :underspecs]
     ]
   end
 

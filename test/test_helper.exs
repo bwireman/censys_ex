@@ -11,6 +11,6 @@ defmodule CensysEx.TestHelpers do
   end
 end
 
-Mox.defmock(CensysEx.ApiMock, for: CensysEx.APIBehavior)
-Application.put_env(:censys_ex, :client, CensysEx.ApiMock)
+Mimic.copy(CensysEx.API)
+Application.put_env(:censys_ex, :client, CensysEx.API)
 ExUnit.start()

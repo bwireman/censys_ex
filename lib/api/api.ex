@@ -2,8 +2,6 @@ defmodule CensysEx.API do
   @moduledoc """
   Base Wrapper for search.censys.io v2 APIs
   """
-
-  @behaviour CensysEx.APIBehavior
   use GenServer
 
   alias CensysEx.Util
@@ -70,23 +68,19 @@ defmodule CensysEx.API do
   end
 
   @spec view(String.t(), String.t(), DateTime.t() | nil) :: CensysEx.result()
-  @impl CensysEx.APIBehavior
   def view(resource, id, at_time \\ nil),
     do: get(resource, id, [], params: Util.build_view_params(at_time))
 
   @spec aggregate(String.t(), String.t(), String.t() | nil, integer(), Keyword.t()) ::
           CensysEx.result()
-  @impl CensysEx.APIBehavior
   def aggregate(resource, field, query \\ nil, num_buckets \\ 50, other_params \\ Keyword.new()),
     do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets) ++ other_params)
 
   @spec get(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
-  @impl CensysEx.APIBehavior
   def get(resource, action, headers \\ [], options \\ []),
     do: GenServer.call(__MODULE__, {:get, {build_v2_path(resource, action), headers, options}}, @timeout)
 
   @spec get_v1(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
-  @impl CensysEx.APIBehavior
   def get_v1(resource, action, headers \\ [], options \\ []),
     do: GenServer.call(__MODULE__, {:get, {build_v1_path(resource, action), headers, options}}, @timeout)
 
