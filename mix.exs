@@ -7,7 +7,7 @@ defmodule CensysEx.MixProject do
     [
       app: :censys_ex,
       version: @pkg_version,
-      elixir: "~> 1.10",
+      elixir: "~> 1.11",
       deps: deps(),
       aliases: aliases(),
       docs: [
