@@ -7,18 +7,9 @@ defmodule CensysEx.Util do
   @invalid_message "Invalid API response"
   @invalid_api_resp {:error, @invalid_message}
 
-  @spec parse_body(String.t(), integer()) :: CensysEx.result()
+  @spec parse_body(map(), integer()) :: CensysEx.result()
   def parse_body(body, status_code) do
-    case Jason.decode(body) do
-      {:ok, decoded} when is_map(decoded) ->
-        parse_status_code(decoded, status_code)
-
-      {:error, %Jason.DecodeError{} = decode_error} ->
-        {:error, "#{@invalid_message}. Failed to parse JSON response: " <> Jason.DecodeError.message(decode_error)}
-
-      _ ->
-        @invalid_api_resp
-    end
+    parse_status_code(body, status_code)
   end
 
   @spec build_view_params(DateTime.t() | nil) :: [{:at_time, String.t()}] | []

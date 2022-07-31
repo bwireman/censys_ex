@@ -3,13 +3,14 @@ defmodule CensysEx.Paginate do
   CensysEx.Paginate implements a wrapper for cursor paginated APIs
   """
 
-  @enforce_keys [:next_fn, :results_fn]
-  defstruct [:next_fn, :results_fn, cursor: "", params: Keyword.new(), results: %{}, page: 0]
+  @enforce_keys [:client, :next_fn, :results_fn]
+  defstruct [:client, :next_fn, :results_fn, cursor: "", params: Keyword.new(), results: %{}, page: 0]
 
   @typedoc """
   struct to maintain the state of a paginated api call
   """
   @type t :: %CensysEx.Paginate{
+          client: CensysEx.API.t(),
           next_fn: next_page_fn(),
           results_fn: result_extractor(),
           params: Keyword.t(),
@@ -26,11 +27,12 @@ defmodule CensysEx.Paginate do
   @typedoc """
   function that takes in a keyword list of query params and returns either a map of results or an error
   """
-  @type next_page_fn :: (Keyword.t() -> CensysEx.result())
+  @type next_page_fn :: (CensysEx.API.t(), Keyword.t() -> CensysEx.result())
 
-  @spec stream(next_page_fn(), result_extractor(), keyword()) :: CensysEx.result_stream(any())
-  def stream(next_fn, results_fn, params \\ Keyword.new()) do
+  @spec stream(CensysEx.API.t(), next_page_fn(), result_extractor(), keyword()) :: CensysEx.result_stream(any())
+  def stream(client, next_fn, results_fn, params \\ Keyword.new()) do
     client = %CensysEx.Paginate{
+      client: client,
       next_fn: next_fn,
       results_fn: results_fn,
       params: params
@@ -73,7 +75,7 @@ defmodule CensysEx.Paginate do
           cursor -> [cursor: cursor] ++ client.params
         end
 
-      case client.next_fn.(params: params) do
+      case client.next_fn.(client.client, params: params) do
         {:ok, body} ->
           next_cursor = get_in(body, ["result", "links", "next"])
           iterate_page(client, body, next_cursor)
