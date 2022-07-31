@@ -4,7 +4,7 @@ defmodule CensysEx.Experimental do
   *_NOTE_*: these APIs are subject to change in the future and CensysEx may get out of sync with Censys
   """
 
-  alias CensysEx.{Paginate, Util}
+  alias CensysEx.{API, Paginate, Util}
 
   @doc """
   Hits the Experimental Censys host events API
@@ -21,12 +21,17 @@ defmodule CensysEx.Experimental do
   ["service_observed", "location_updated", ...]
   ```
   """
-  @spec host_events(String.t(), integer(), boolean(), DateTime.t() | nil, DateTime.t() | nil) ::
+  @spec host_events(API.t(), String.t(), integer(), boolean(), DateTime.t() | nil, DateTime.t() | nil) ::
           CensysEx.result_stream(map())
-  def host_events(ip, per_page \\ 50, reversed \\ false, start_time \\ nil, end_time \\ nil) do
-    next = fn params -> CensysEx.API.get("experimental", "hosts/#{ip}/events", [], params) end
+  def host_events(client, ip, per_page \\ 50, reversed \\ false, start_time \\ nil, end_time \\ nil) do
+    next = fn client, params -> API.get(client, "experimental", "hosts/#{ip}/events", params) end
     extractor = fn client = %Paginate{} -> get_in(client.results, ["result", "events"]) end
 
-    Paginate.stream(next, extractor, Util.build_experimental_get_host_events(per_page, reversed, start_time, end_time))
+    Paginate.stream(
+      client,
+      next,
+      extractor,
+      Util.build_experimental_get_host_events(per_page, reversed, start_time, end_time)
+    )
   end
 end

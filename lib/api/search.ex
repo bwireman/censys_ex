@@ -5,13 +5,13 @@ defmodule CensysEx.Search do
 
   alias CensysEx.Paginate
 
-  @spec search(String.t(), String.t(), integer(), Keyword.t()) :: CensysEx.result_stream(map())
-  def search(index, query \\ "", per_page \\ 100, other_params \\ Keyword.new()),
-    do: Paginate.stream(gen_search_fn(index), &get_hits/1, [q: query, per_page: per_page] ++ other_params)
+  @spec search(CensysEx.API.t(), String.t(), String.t(), integer(), Keyword.t()) :: CensysEx.result_stream(map())
+  def search(client, index, query \\ "", per_page \\ 100, other_params \\ Keyword.new()),
+    do: Paginate.stream(client, gen_search_fn(index), &get_hits/1, [q: query, per_page: per_page] ++ other_params)
 
   defp get_hits(%Paginate{} = client),
     do: get_in(client.results, ["result", "hits"])
 
   defp gen_search_fn(index),
-    do: fn params -> CensysEx.API.get(index, "search", [], params) end
+    do: fn client, params -> CensysEx.API.get(client, index, "search", params) end
 end

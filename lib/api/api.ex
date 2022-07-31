@@ -2,143 +2,73 @@ defmodule CensysEx.API do
   @moduledoc """
   Base Wrapper for search.censys.io v2 APIs
   """
-  use GenServer
-
   alias CensysEx.Util
 
-  @id_var "CENSYS_API_ID"
-  @secret_var "CENSYS_API_SECRET"
-  @creds "CENSYS_API_CREDS"
-  @timeout 10_000
-  @api_root "https://search.censys.io/api/"
-  @v1_api @api_root <> "v1/"
-  @v2_api @api_root <> "v2/"
+  @opaque t() :: Tesla.Client.t()
+
+  @spec client :: t()
+  def client, do: client(Application.get_env(:censys_ex, :api_id), Application.get_env(:censys_ex, :api_key))
 
   # api
+  @spec client(String.t(), String.t()) :: t()
+  def client(api_key, api_secret) do
+    middleware = [
+      {Tesla.Middleware.BaseUrl, "https://search.censys.io/api/"},
+      Tesla.Middleware.JSON,
+      {Tesla.Middleware.BasicAuth, username: api_key, password: api_secret},
+      {Tesla.Middleware.Headers, [{"Content-Type", "application/json"}]}
+    ]
 
-  @doc """
-  Starts the CensysEx.API. Pulls in API ID & secret from the env variables `CENSYS_API_ID` & `CENSYS_API_SECRET`
-
-  ## Examples
-  ```
-  iex(1)> # CENSYS_API_ID environment var not set
-  iex(2)> CensysEx.API.start_link
-  {:error, "CENSYS_API_ID missing!"}
-  ```
-  """
-  @spec start_link() :: GenServer.on_start()
-  def start_link do
-    id = System.get_env(@id_var, "")
-    secret = System.get_env(@secret_var, "")
-
-    CensysEx.API.start_link(id, secret)
+    adapter = {Tesla.Adapter.Finch, [name: CensysExFinch]}
+    Tesla.client(middleware, adapter)
   end
 
-  @doc """
-  Starts the CensysEx.API process
+  @spec view(t(), String.t(), String.t(), DateTime.t() | nil) :: CensysEx.result()
+  def view(client, resource, id, at_time \\ nil),
+    do: get(client, resource, id, params: Util.build_view_params(at_time))
 
-  ## Examples
-  ```
-  {:ok, _} = CensysEx.API.start_link([id: "***********", secret: "***********"])
-  ```
-  """
-  @spec start_link(keyword(String.t())) :: GenServer.on_start()
-  def start_link(creds) do
-    id = Access.get(creds, :id, "")
-    secret = Access.get(creds, :secret, "")
-
-    CensysEx.API.start_link(id, secret)
-  end
-
-  @doc """
-  Starts the CensysEx.API process
-
-  ## Examples
-  ```
-  {:ok, _} = CensysEx.API.start_link("***********", "***********")
-  ```
-  """
-  @spec start_link(String.t(), String.t()) :: GenServer.on_start()
-  def start_link(id, secret) do
-    case {id, secret} do
-      {"", _} -> {:error, @id_var <> " missing!"}
-      {_, ""} -> {:error, @secret_var <> " missing!"}
-      _ -> GenServer.start_link(__MODULE__, {id, secret}, name: __MODULE__)
-    end
-  end
-
-  @spec view(String.t(), String.t(), DateTime.t() | nil) :: CensysEx.result()
-  def view(resource, id, at_time \\ nil),
-    do: get(resource, id, [], params: Util.build_view_params(at_time))
-
-  @spec aggregate(String.t(), String.t(), String.t() | nil, integer(), Keyword.t()) ::
+  @spec aggregate(t(), String.t(), String.t(), String.t() | nil, integer(), Keyword.t()) ::
           CensysEx.result()
-  def aggregate(resource, field, query \\ nil, num_buckets \\ 50, other_params \\ Keyword.new()),
-    do: get(resource, "aggregate", [], params: Util.build_aggregate_params(field, query, num_buckets) ++ other_params)
+  def aggregate(
+        client,
+        resource,
+        field,
+        query \\ nil,
+        num_buckets \\ 50,
+        other_params \\ Keyword.new()
+      ),
+      do:
+        get(client, resource, "aggregate",
+          params: Util.build_aggregate_params(field, query, num_buckets) ++ other_params
+        )
 
-  @spec get(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
-  def get(resource, action, headers \\ [], options \\ []),
-    do: GenServer.call(__MODULE__, {:get, {build_v2_path(resource, action), headers, options}}, @timeout)
+  @spec get(t(), String.t(), String.t(), keyword()) :: CensysEx.result()
+  def get(client, resource, action, options \\ []),
+    do: request(client, build_v2_path(resource, action), options)
 
-  @spec get_v1(String.t(), String.t(), list(), keyword()) :: CensysEx.result()
-  def get_v1(resource, action, headers \\ [], options \\ []),
-    do: GenServer.call(__MODULE__, {:get, {build_v1_path(resource, action), headers, options}}, @timeout)
+  @spec get_v1(t(), String.t(), String.t(), keyword()) :: CensysEx.result()
+  def get_v1(client, resource, action, options \\ []),
+    do: request(client, build_v1_path(resource, action), options)
 
   # util
   @spec build_v1_path(String.t(), String.t()) :: String.t()
   defp build_v1_path(resource, action),
-    do: @v1_api <> action <> "/" <> resource
+    do: "v1/" <> action <> "/" <> resource
 
   @spec build_v2_path(String.t(), String.t()) :: String.t()
   defp build_v2_path(resource, action),
-    do: @v2_api <> resource <> "/" <> action
+    do: "v2/" <> resource <> "/" <> action
 
-  @spec get_creds() :: {String.t(), String.t()}
-  defp get_creds do
-    case :ets.lookup(__MODULE__, @creds) do
-      [head | _] -> head |> elem(1)
-    end
-  end
-
-  # impl
-
-  @doc false
-  @impl GenServer
-  def init({id, secret}) do
-    __MODULE__ = :ets.new(__MODULE__, [:set, :named_table, :private])
-    :ets.insert(__MODULE__, {@creds, {id, secret}})
-    {:ok, nil}
-  end
-
-  @doc false
-  @impl GenServer
-  def handle_call({:get, {path, headers, options}}, _from, nil) do
-    basic_auth = get_creds()
-
-    options =
-      Keyword.update(
-        options,
-        :hackney,
-        Keyword.new(basic_auth: basic_auth),
-        &Keyword.put_new(&1, :basic_auth, basic_auth)
-      )
-
-    headers = [{"Content-Type", "application/json"} | headers]
-
+  defp request(client, path, options) do
     resp =
-      case HTTPoison.get(path, headers, options) do
-        {:ok, %HTTPoison.Response{body: body, status_code: status_code}} ->
+      case Tesla.get(client, path, opts: options) do
+        {:ok, %Tesla.Env{body: body, status: status_code}} ->
           Util.parse_body(body, status_code)
 
-        {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason} ->
           {:error, reason}
       end
 
-    {:reply, resp, nil}
-  end
-
-  @impl GenServer
-  def handle_info(_, state) do
-    {:noreply, state}
+    resp
   end
 end

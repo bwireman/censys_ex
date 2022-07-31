@@ -8,6 +8,9 @@ defmodule CensysEx.Metadata do
 
   - API docs: https://search.censys.io/api#/hosts/getHostMetadata
   """
-  @spec hosts_metadata :: CensysEx.result()
-  def hosts_metadata, do: CensysEx.API.get("metadata", "hosts", [], [])
+
+  alias CensysEx.API
+
+  @spec hosts_metadata(API.t()) :: CensysEx.result()
+  def hosts_metadata(client), do: API.get(client, "metadata", "hosts", [])
 end
