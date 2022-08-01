@@ -1,36 +1,36 @@
-defmodule CensysExExperimentalTest do
-  use ExUnit.Case, async: true
+defmodule CensysEx.ExperimentalTest do
+  use CensysEx.ClientCase
   import Mimic
 
   setup :verify_on_exit!
 
   @cursor "AS-RtkdTRUHZmiJoIbUXCmByfp5GDTnJrysJOelGDxWupIvXPZMzaCItyOiH7Xb9gGd08iAmuZS3ygcwxz0GuifzAD4AyUGjJ-bAb4XAar4YsRqJnjY2ByzdPB1rSaCvRx8O7nyWzbX-wyv3VyAg_PUDbg=="
 
-  test "can get events for a host" do
+  test "can get events for a host", %{client: client} do
     CensysEx.API
-    |> expect(:get, 1, fn "experimental", "hosts/1.1.1.1/events", [], params: [per_page: 25, reversed: false] ->
+    |> expect(:get, 1, fn _, "experimental", "hosts/1.1.1.1/events", params: [per_page: 25, reversed: false] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-events")
     end)
-    |> expect(:get, 1, fn "experimental",
+    |> expect(:get, 1, fn _,
+                          "experimental",
                           "hosts/1.1.1.1/events",
-                          [],
                           params: [cursor: @cursor, per_page: 25, reversed: false] ->
       CensysEx.TestHelpers.load_response("1.1.1.1-events")
     end)
 
     hits =
-      CensysEx.Experimental.host_events("1.1.1.1", 25)
+      CensysEx.Experimental.host_events(client, "1.1.1.1", 25)
       |> Stream.take(50)
       |> Enum.to_list()
 
     assert length(hits) == 50
   end
 
-  test "can get events for a host: cutoff" do
+  test "can get events for a host: cutoff", %{client: client} do
     CensysEx.API
-    |> expect(:get, 1, fn "experimental",
+    |> expect(:get, 1, fn _,
+                          "experimental",
                           "hosts/1.1.1.1/events",
-                          [],
                           params: [
                             per_page: 25,
                             reversed: true,
@@ -42,6 +42,7 @@ defmodule CensysExExperimentalTest do
 
     hits =
       CensysEx.Experimental.host_events(
+        client,
         "1.1.1.1",
         25,
         true,

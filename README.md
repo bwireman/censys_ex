@@ -1,6 +1,6 @@
 # CensysEx
 
-Tiny Elixir ⚗️ wrapper for the Censys Search 2.0 [API](https://search.censys.io/api) 
+Tiny Elixir ⚗️ wrapper for the Censys Search 2.0 [API](https://search.censys.io/api)
 
 [![ci](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml/badge.svg?branch=main)](https://github.com/bwireman/censys_ex/actions/workflows/elixir.yml)
 [![mit](https://img.shields.io/github/license/bwireman/censys_ex?color=brightgreen)](https://github.com/bwireman/censys_ex/blob/main/LICENSE)
@@ -26,11 +26,13 @@ end
 
 ## Setup
 
-via environment variables
+via Application variables
 
-```bash
-export CENSYS_API_ID="*****"
-export CENSYS_API_SECRET="*****"
+```elixir
+config :censys_ex,
+  api_id: "*****",
+  api_key: "*****"
+
 ```
 
 ```elixir
@@ -45,18 +47,13 @@ iex(1)> CensysEx.API.start_link("*****", "*****")
 {:ok, #PID<0.252.0>}
 ```
 
-```elixir
-iex(1)> CensysEx.API.start_link([id: "*****", secret: "*****"])
-{:ok, #PID<0.252.0>}
-```
-
 API secrets can be found [here](https://search.censys.io/account/api)
 
 ## Hosts
 
 ### View a host
 
-View all the data on an IP at a given time. 
+View all the data on an IP at a given time.
 
 ```elixir
 CensysEx.Hosts.view("127.0.0.1")
@@ -125,7 +122,6 @@ CensysEx.Hosts.diff("8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[202
 - [search](https://search.censys.io/api#/hosts/searchHosts)
 - [search-syntax](https://search.censys.io/search/language?resource=hosts)
 
-
 ## Certs
 
 ### View a cert by fingerprint
@@ -136,7 +132,6 @@ CensysEx.Certs.view("fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d1
 ```
 
 ### Get hosts that present a cert
-
 
 ```elixir
 CensysEx.Certs.get_hosts_by_cert("fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")

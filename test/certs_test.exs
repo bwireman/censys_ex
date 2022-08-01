@@ -1,5 +1,5 @@
-defmodule CensysExCertsTest do
-  use ExUnit.Case, async: true
+defmodule CensysEx.CertsTest do
+  use CensysEx.ClientCase
   import Mimic
 
   setup :verify_on_exit!
@@ -9,13 +9,13 @@ defmodule CensysExCertsTest do
   @cursor "AS-RtkeohWDBa9T6Jxztjot4qtflR5ZptVeEQ_uZWlhUlNcRvFvGZ4Wxj1iUMFy5qd6boAT0kA=="
 
   # view certs
-  test "view cert" do
+  test "view cert", %{client: client} do
     CensysEx.API
-    |> expect(:get_v1, fn "certificates/" <> @fp, "view", [], [] ->
+    |> expect(:get_v1, fn _, "certificates/" <> @fp, "view", [] ->
       CensysEx.TestHelpers.load_response("certificate-view", 200)
     end)
 
-    {:ok, resp} = CensysEx.Certs.view(@fp)
+    {:ok, resp} = CensysEx.Certs.view(client, @fp)
 
     assert get_in(resp, ["parent_spki_subject_fingerprint"]) ==
              "5ca030abfa05e5f26bee0f21774984145f8ddac6e4b5c0da590f537b3fd22367"
@@ -24,31 +24,31 @@ defmodule CensysExCertsTest do
   end
 
   # hosts showing certs
-  test "can get hosts for a cert" do
+  test "can get hosts for a cert", %{client: client} do
     CensysEx.API
-    |> expect(:get, 1, fn "certificates", @get_hosts_path, [], params: [] ->
+    |> expect(:get, 1, fn _, "certificates", @get_hosts_path, params: [] ->
       CensysEx.TestHelpers.load_response("certificate-hosts")
     end)
-    |> expect(:get, 1, fn "certificates", @get_hosts_path, [], params: [cursor: @cursor] ->
+    |> expect(:get, 1, fn _, "certificates", @get_hosts_path, params: [cursor: @cursor] ->
       CensysEx.TestHelpers.load_response("certificate-hosts")
     end)
 
     hits =
-      CensysEx.Certs.get_hosts_by_cert(@fp)
+      CensysEx.Certs.get_hosts_by_cert(client, @fp)
       |> Stream.take(150)
       |> Enum.to_list()
 
     assert length(hits) == 150
   end
 
-  test "can get hosts for a cert: cutoff" do
+  test "can get hosts for a cert: cutoff", %{client: client} do
     CensysEx.API
-    |> expect(:get, 1, fn "certificates", @get_hosts_path, [], params: [] ->
+    |> expect(:get, 1, fn _, "certificates", @get_hosts_path, params: [] ->
       CensysEx.TestHelpers.load_response("certificate-hosts")
     end)
 
     hits =
-      CensysEx.Certs.get_hosts_by_cert(@fp)
+      CensysEx.Certs.get_hosts_by_cert(client, @fp)
       |> Stream.take(10)
       |> Enum.to_list()
 
