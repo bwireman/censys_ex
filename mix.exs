@@ -19,14 +19,22 @@ defmodule CensysEx.MixProject do
       source_url: "https://github.com/bwireman/censys_ex",
       homepage_url: "https://hexdocs.pm/censys_ex/readme.html",
       package: package(),
-      dialyzer: dialyzer()
+      dialyzer: dialyzer(),
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    []
+    [
+      extra_applications: [:logger],
+      mod: {CensysEx.Application, []}
+    ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
@@ -34,6 +42,8 @@ defmodule CensysEx.MixProject do
       {:httpoison, "~> 2.2"},
       {:jason, "~> 1.2"},
       {:timex, "~> 3.7"},
+      {:finch, "~> 0.12.0"},
+      {:dreamy, "~> 0.1.3"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:mimic, "~> 1.7", only: :test},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},

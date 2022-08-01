@@ -1,1 +1,5 @@
-{"code": 401, "status": "Unauthorized", "error": "You must authenticate with a valid API ID and secret."}
+{
+  "code": 401,
+  "status": "Unauthorized",
+  "error": "You must authenticate with a valid API ID and secret."
+}
