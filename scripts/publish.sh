@@ -22,11 +22,12 @@ if [ ! -z "$(git status --porcelain)" ]; then
 fi
 
 function publish {
+    MIX_ENV=dev mix quality
     echo "Tagging" "$VER"
     git tag "$VER"
     git push origin "$VER"
     echo "Publishing to Hex" "$VER"
-    mix hex.publish
+    HEX_API_KEY=$(cat key._) mix hex.publish
     echo "🚀"
 }
 
