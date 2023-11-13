@@ -33,18 +33,15 @@ config :censys_ex,
   api_id: "*****",
   api_key: "*****"
 
-```
+# ...
 
-```elixir
-iex(1)> CensysEx.API.start_link()
-{:ok, #PID<0.253.0>}
+CensysEx.API.client()
 ```
 
 or directly
 
 ```elixir
-iex(1)> CensysEx.API.start_link("*****", "*****")
-{:ok, #PID<0.252.0>}
+CensysEx.API.client("*****", "*****")
 ```
 
 API secrets can be found [here](https://search.censys.io/account/api)
