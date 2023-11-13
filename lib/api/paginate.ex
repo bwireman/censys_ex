@@ -65,24 +65,23 @@ defmodule CensysEx.Paginate do
 
   # build query params and calls client.next_fn and paginates to the next page
   @spec search_internal!(t()) :: t() | no_return()
+  defp search_internal!(%CensysEx.Paginate{} = client) when client.page > 0 and client.cursor == "",
+    do: iterate_page(client)
+
   defp search_internal!(%CensysEx.Paginate{} = client) do
-    if client.page > 0 and client.cursor == "" do
-      iterate_page(client)
-    else
-      params =
-        case client.cursor do
-          "" -> [] ++ client.params
-          cursor -> [cursor: cursor] ++ client.params
-        end
-
-      case client.next_fn.(client.client, params: params) do
-        {:ok, body} ->
-          next_cursor = get_in(body, ["result", "links", "next"])
-          iterate_page(client, body, next_cursor)
-
-        {:error, err} ->
-          raise CensysEx.Exception, message: "CensysEx: " <> err
+    params =
+      case client.cursor do
+        "" -> [] ++ client.params
+        cursor -> [cursor: cursor] ++ client.params
       end
+
+    case client.next_fn.(client.client, params: params) do
+      {:ok, body} ->
+        next_cursor = get_in(body, ["result", "links", "next"])
+        iterate_page(client, body, next_cursor)
+
+      {:error, err} ->
+        raise CensysEx.Exception, message: "CensysEx: " <> err
     end
   end
 end
