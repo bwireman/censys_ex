@@ -1,5 +1,6 @@
 defmodule CensysEx.Util do
   @moduledoc false
+  use Dreamy
 
   # RFC3339 format
   @at_time_format "%Y-%m-%dT%H:%M:%S"
@@ -8,15 +9,12 @@ defmodule CensysEx.Util do
   @invalid_api_resp {:error, @invalid_message}
 
   @spec parse_body(map(), integer()) :: CensysEx.result()
-  def parse_body(body, status_code) do
-    parse_status_code(body, status_code)
-  end
+  def parse_body(body, status_code), do: parse_status_code(body, status_code)
 
   @spec build_view_params(DateTime.t() | nil) :: [{:at_time, String.t()}] | []
   def build_view_params(at_time) do
-    case at_time do
+    otherwise at_time, at_time: Timex.format!(at_time, @at_time_format, :strftime) do
       nil -> []
-      _ -> [at_time: Timex.format!(at_time, @at_time_format, :strftime)]
     end
   end
 
@@ -49,16 +47,13 @@ defmodule CensysEx.Util do
   defp parse_status_code(decoded, status_code) do
     status_code = Map.get(decoded, "code", status_code)
 
-    case status_code do
+    otherwise status_code, @invalid_api_resp do
       code when is_integer(code) and code >= 400 ->
         {:error,
          Map.get(decoded, "error", "Unknown Error occurred with status code: " <> Integer.to_string(status_code))}
 
       code when is_integer(code) and code >= 200 and code < 300 ->
         {:ok, decoded}
-
-      _ ->
-        @invalid_api_resp
     end
   end
 end

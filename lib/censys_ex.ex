@@ -6,11 +6,11 @@ defmodule CensysEx do
   @typedoc """
   Return type of CensysEx API wrappers that aren't streams
   """
-  @type result :: {:ok, map()} | {:error, any}
+  @type result :: Dreamy.Types.result(map(), any())
 
   @typedoc """
   Return type of streaming wrappers
   """
   # type parameter for documentation purposes only
-  @type result_stream(_t) :: Enumerable.t()
+  @type result_stream(t) :: Dreamy.Types.enumerable(t)
 end

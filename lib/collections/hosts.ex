@@ -2,6 +2,9 @@ defmodule CensysEx.Hosts do
   @moduledoc """
   CensysEx wrapper for the search.censys.io v2 API for the "hosts" resource
   """
+
+  use Dreamy
+
   alias CensysEx.{API, Paginate, Search, Util}
 
   @typedoc """
@@ -116,10 +119,9 @@ defmodule CensysEx.Hosts do
 
   @spec vhost_to_string(v_hosts) :: String.t()
   defp vhost_to_string(v_host) do
-    case v_host do
+    otherwise v_host, "EXCLUDE" do
       :include -> "INCLUDE"
       :only -> "ONLY"
-      _ -> "EXCLUDE"
     end
   end
 end

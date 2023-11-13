@@ -2,6 +2,8 @@ defmodule CensysEx.API do
   @moduledoc """
   Base Wrapper for search.censys.io v2 APIs
   """
+  use Dreamy
+
   alias CensysEx.Util
 
   @opaque t() :: Tesla.Client.t()
@@ -60,15 +62,7 @@ defmodule CensysEx.API do
     do: "v2/" <> resource <> "/" <> action
 
   defp request(client, path, options) do
-    resp =
-      case Tesla.get(client, path, opts: options) do
-        {:ok, %Tesla.Env{body: body, status: status_code}} ->
-          Util.parse_body(body, status_code)
-
-        {:error, reason} ->
-          {:error, reason}
-      end
-
-    resp
+    Tesla.get(client, path, opts: options)
+    ~>> fn {:ok, %Tesla.Env{body: body, status: status_code}} -> Util.parse_body(body, status_code) end
   end
 end

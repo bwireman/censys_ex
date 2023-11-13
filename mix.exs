@@ -1,7 +1,7 @@
 defmodule CensysEx.MixProject do
   use Mix.Project
 
-  @pkg_version "1.2.3"
+  @pkg_version "2.0.0"
 
   def project do
     [
@@ -39,15 +39,15 @@ defmodule CensysEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 2.2"},
+      {:tesla, "~> 1.8"},
       {:jason, "~> 1.2"},
       {:timex, "~> 3.7"},
-      {:finch, "~> 0.12.0"},
+      {:finch, "~> 0.16.0"},
       {:dreamy, "~> 0.1.3"},
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:mimic, "~> 1.7", only: :test},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.29.4", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.30.9", only: :dev, runtime: false}
     ]
   end
 
