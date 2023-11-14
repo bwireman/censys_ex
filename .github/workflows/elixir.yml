@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Build and test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     env:
       MIX_ENV: test
     strategy:
@@ -17,14 +17,14 @@ jobs:
       matrix:
         include:
           - pair:
-              elixir: 1.12.2
-              otp: 24.3.4.2
-          - pair:
               elixir: 1.13.4
-              otp: 25.0.2
+              otp: 25.3
           - pair:
               elixir: 1.14.3
-              otp: 26.0.2
+              otp: 25.3
+          - pair:
+              elixir: 1.15.5
+              otp: 25.3
 
     steps:
       - uses: actions/checkout@v2
