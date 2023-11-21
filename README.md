@@ -53,10 +53,10 @@ API secrets can be found [here](https://search.censys.io/account/api)
 View all the data on an IP at a given time.
 
 ```elixir
-CensysEx.Hosts.view("127.0.0.1")
+CensysEx.Hosts.view(client, "127.0.0.1")
 
 # Lookup the host as it was at a certain time
-CensysEx.Hosts.view("127.0.0.1", ~U[2021-06-07 12:53:27.450073Z])
+CensysEx.Hosts.view(client, "127.0.0.1", ~U[2021-06-07 12:53:27.450073Z])
 ```
 
 ### Get host names
@@ -64,7 +64,7 @@ CensysEx.Hosts.view("127.0.0.1", ~U[2021-06-07 12:53:27.450073Z])
 Returns a stream of names for that IP.
 
 ```elixir
-iex(1)> CensysEx.Hosts.names("127.0.0.1") |>
+iex(1)> CensysEx.Hosts.names(client, "127.0.0.1") |>
 ...(1)> Stream.take(25) |>
 ...(1)> Enum.to_list()
 ["example.com", "foo.net", ...]
@@ -75,7 +75,7 @@ iex(1)> CensysEx.Hosts.names("127.0.0.1") |>
 Search returns a stream of results using the cursors provided by the API.
 
 ```elixir
-iex(1)> CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)") |>
+iex(1)> CensysEx.Hosts.search(client, "same_service(service_name: SSH and not port: 22)") |>
 ...(1)> Stream.take(25) |>
 ...(1)> Stream.map(&Map.get(&1, "ip")) |>
 ...(1)> Enum.to_list()
@@ -87,9 +87,9 @@ iex(1)> CensysEx.Hosts.search("same_service(service_name: SSH and not port: 22)"
 Aggregate data about hosts on the internet.
 
 ```elixir
-CensysEx.Hosts.aggregate("location.country_code", "services.service_name: MEMCACHED")
+CensysEx.Hosts.aggregate(client, "location.country_code", "services.service_name: MEMCACHED")
 
-CensysEx.Hosts.aggregate("location.country_code", "services.service_name: MEMCACHED", 10)
+CensysEx.Hosts.aggregate(client, "location.country_code", "services.service_name: MEMCACHED", 10)
 ```
 
 ### Diff hosts
@@ -98,16 +98,16 @@ Diff hosts at given times
 
 ```elixir
 # diff the current host with it self 🤷
-CensysEx.Hosts.diff("8.8.8.8")
+CensysEx.Hosts.diff(client, "8.8.8.8")
 
 # diff two hosts
-CensysEx.Hosts.diff("8.8.8.8", "1.1.1.1")
+CensysEx.Hosts.diff(client, "8.8.8.8", "1.1.1.1")
 
 # diff a host with itself at a time in the past
-CensysEx.Hosts.diff("8.8.8.8", nil, ~U[2021-06-07 12:53:27.450073Z])
+CensysEx.Hosts.diff(client, "8.8.8.8", nil, ~U[2021-06-07 12:53:27.450073Z])
 
 # diff two hosts in the past
-CensysEx.Hosts.diff("8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[2021-06-07 12:53:27.450073Z])
+CensysEx.Hosts.diff(client, "8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[2021-06-07 12:53:27.450073Z])
 ```
 
 ### Hosts API Docs
@@ -125,13 +125,13 @@ CensysEx.Hosts.diff("8.8.8.8", "8.8.4.4" ~U[2021-06-07 12:53:27.450073Z], ~U[202
 
 ```elixir
 # NOTE this actually a V1 API
-CensysEx.Certs.view("fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")
+CensysEx.Certs.view(client, "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")
 ```
 
 ### Get hosts that present a cert
 
 ```elixir
-CensysEx.Certs.get_hosts_by_cert("fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")
+CensysEx.Certs.get_hosts_by_cert(client, "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426")
 |> Stream.take(25)
 |> Stream.map(&Map.get(&1, "ip"))
 |> Enum.to_list()
@@ -146,7 +146,7 @@ CensysEx.Certs.get_hosts_by_cert("fb444eb8e68437bae06232b9f5091bccff62a768ca09e9
 ### Experimental
 
 ```elixir
-CensysEx.Experimental.host_events("127.0.0.1")
+CensysEx.Experimental.host_events(client, "127.0.0.1")
 |> Stream.take(25)
 |> Stream.map(&Map.get(&1, "_event"))
 |> Enum.to_list()
