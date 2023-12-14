@@ -1,8 +1,9 @@
 defmodule CensysEx.Application do
   @moduledoc false
   use Application
+  use Dreamy
 
-  @spec start(any, any) :: Dreamy.Types.result(pid(), any())
+  @spec start(any, any) :: Types.result(pid(), any())
   def start(_type, _args) do
     children = [
       {Finch, name: CensysExFinch}

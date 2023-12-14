@@ -2,15 +2,16 @@ defmodule CensysEx do
   @moduledoc """
   Root of the CensysEx lib
   """
+  use Dreamy
 
   @typedoc """
   Return type of CensysEx API wrappers that aren't streams
   """
-  @type result :: Dreamy.Types.result(map(), any())
+  @type result :: Types.result(map(), any())
 
   @typedoc """
   Return type of streaming wrappers
   """
   # type parameter for documentation purposes only
-  @type result_stream(t) :: Dreamy.Types.enumerable(t)
+  @type result_stream(t) :: Types.enumerable(t)
 end

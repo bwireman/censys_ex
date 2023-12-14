@@ -63,6 +63,6 @@ defmodule CensysEx.API do
 
   defp request(client, path, options) do
     Tesla.get(client, path, opts: options)
-    ~>> fn {:ok, %Tesla.Env{body: body, status: status_code}} -> Util.parse_body(body, status_code) end
+    ~>> fn %Tesla.Env{body: body, status: status_code} -> Util.parse_body(body, status_code) end
   end
 end
