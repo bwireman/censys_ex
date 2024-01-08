@@ -42,7 +42,7 @@ defmodule CensysEx.MixProject do
       {:tesla, "~> 1.8"},
       {:jason, "~> 1.2"},
       {:timex, "~> 3.7"},
-      {:finch, "~> 0.16.0"},
+      {:finch, "~> 0.17.0"},
       {:dreamy, "~> 0.2.1"},
       {:mimic, "~> 1.7", only: :test},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
